@@ -3,33 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brew & Soul | קפה בוטיק תל אביב</title>
+    <title>Brew & Soul</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --coffee: #1a1209;
-            --cream: #f4efe8;
-            --gold: #b8956a;
-            --gold-dark: #8a6d4b;
-            --warm-white: #faf8f5;
-            --text: #2d2117;
-            --text-muted: #8c7b6b;
+            --black: #0a0a0a;
+            --off-white: #f2efe9;
+            --cream: #e8e2d8;
+            --accent: #c4a265;
+            --accent-dim: rgba(196,162,101,0.15);
+            --text: #1a1a1a;
+            --text-light: #777;
+            --serif: 'Cormorant Garamond', serif;
+            --sans: 'Heebo', sans-serif;
         }
 
-        html { scroll-behavior: auto; }
+        html {
+            scroll-behavior: auto;
+            overflow-x: hidden;
+        }
 
         body {
-            font-family: 'Heebo', sans-serif;
-            background: var(--warm-white);
+            font-family: var(--sans);
+            background: var(--off-white);
             color: var(--text);
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            cursor: default;
         }
 
-        .visibility-hidden { visibility: hidden; }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+        }
+
+        /* ===== CUSTOM CURSOR ===== */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1.5px solid var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hovering {
+            width: 50px;
+            height: 50px;
+            background: rgba(196,162,101,0.1);
+        }
+
+        /* ===== PRELOADER ===== */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--black);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .preloader-text {
+            font-family: var(--serif);
+            font-size: clamp(36px, 8vw, 72px);
+            color: var(--off-white);
+            font-weight: 300;
+            font-style: italic;
+            opacity: 0;
+        }
+
+        .preloader-line {
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+        }
 
         /* ===== NAV ===== */
         .nav {
@@ -37,748 +97,768 @@
             top: 0;
             right: 0;
             left: 0;
-            z-index: 1000;
-            padding: 24px 48px;
+            z-index: 100;
+            padding: 28px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            mix-blend-mode: difference;
+            transition: padding 0.4s, background 0.4s;
         }
 
-        .nav.solid {
-            mix-blend-mode: normal;
-            background: rgba(250, 248, 245, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 16px 48px;
-            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        .nav.scrolled {
+            padding: 16px 40px;
+            background: rgba(10,10,10,0.92);
+            backdrop-filter: blur(16px);
         }
 
         .nav-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: white;
+            font-family: var(--serif);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--off-white);
             text-decoration: none;
-            letter-spacing: -0.3px;
+            letter-spacing: 1px;
         }
-
-        .nav.solid .nav-logo { color: var(--coffee); }
 
         .nav-links {
             display: flex;
-            gap: 36px;
+            gap: 40px;
             list-style: none;
             align-items: center;
         }
 
         .nav-links a {
-            color: rgba(255,255,255,0.8);
+            color: rgba(242,239,233,0.5);
             text-decoration: none;
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 0.3px;
-            transition: opacity 0.3s;
+            font-size: 13px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            position: relative;
         }
 
-        .nav.solid .nav-links a { color: var(--text-muted); }
-        .nav-links a:hover { opacity: 0.6; }
-
-        .nav-cta-btn {
-            padding: 10px 24px;
-            border: 1px solid rgba(255,255,255,0.4);
-            border-radius: 4px;
-            font-weight: 500;
-            transition: background 0.3s, color 0.3s;
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            right: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s;
         }
 
-        .nav.solid .nav-cta-btn {
-            border-color: var(--coffee);
-            color: var(--coffee) !important;
+        .nav-links a:hover { color: var(--off-white); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-reserve {
+            padding: 10px 28px;
+            border: 1px solid rgba(196,162,101,0.4);
+            color: var(--accent) !important;
+            font-weight: 400 !important;
+            transition: background 0.3s, color 0.3s !important;
         }
 
-        .nav-cta-btn:hover {
-            background: white;
-            color: var(--coffee) !important;
+        .nav-reserve::after { display: none !important; }
+        .nav-reserve:hover {
+            background: var(--accent) !important;
+            color: var(--black) !important;
         }
 
-        .nav.solid .nav-cta-btn:hover {
-            background: var(--coffee);
-            color: white !important;
-        }
-
-        .nav-mobile-toggle {
+        .nav-burger {
             display: none;
+            flex-direction: column;
+            gap: 6px;
             background: none;
             border: none;
             cursor: pointer;
-            width: 32px;
-            height: 24px;
-            position: relative;
+            padding: 4px;
         }
 
-        .nav-mobile-toggle span {
-            position: absolute;
-            right: 0;
-            height: 2px;
-            background: white;
-            transition: all 0.3s;
+        .nav-burger span {
+            display: block;
+            height: 1px;
+            background: var(--off-white);
+            transition: transform 0.3s, opacity 0.3s;
         }
 
-        .nav.solid .nav-mobile-toggle span { background: var(--coffee); }
-
-        .nav-mobile-toggle span:nth-child(1) { top: 0; width: 32px; }
-        .nav-mobile-toggle span:nth-child(2) { top: 11px; width: 24px; }
-        .nav-mobile-toggle span:nth-child(3) { top: 22px; width: 28px; }
+        .nav-burger span:nth-child(1) { width: 28px; }
+        .nav-burger span:nth-child(2) { width: 20px; }
 
         /* ===== HERO ===== */
         .hero {
-            height: 100vh;
-            min-height: 700px;
+            height: 100svh;
+            min-height: 600px;
             position: relative;
             display: flex;
-            align-items: flex-end;
             overflow: hidden;
+            background: var(--black);
         }
 
-        .hero-image-wrap {
+        .hero-bg {
             position: absolute;
             inset: 0;
         }
 
-        .hero-image {
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.55;
+            will-change: transform;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0 clamp(24px, 5vw, 80px) clamp(48px, 8vh, 100px);
+            width: 100%;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            opacity: 0;
+        }
+
+        .hero-label-line {
+            width: 48px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .hero-label span {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 400;
+        }
+
+        .hero-heading {
+            font-family: var(--serif);
+            font-size: clamp(48px, 10vw, 140px);
+            color: var(--off-white);
+            font-weight: 300;
+            line-height: 0.95;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+
+        .hero-heading .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero-heading .line-inner {
+            display: block;
+            transform: translateY(105%);
+        }
+
+        .hero-heading em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 40px;
+        }
+
+        .hero-desc {
+            font-size: clamp(14px, 1.5vw, 17px);
+            color: rgba(242,239,233,0.5);
+            font-weight: 300;
+            line-height: 1.8;
+            max-width: 380px;
+            opacity: 0;
+        }
+
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            opacity: 0;
+            flex-shrink: 0;
+        }
+
+        .hero-cta a {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 36px;
+            background: var(--accent);
+            color: var(--black);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .hero-cta a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(196,162,101,0.3);
+        }
+
+        .hero-cta a svg {
+            transition: transform 0.3s;
+        }
+
+        .hero-cta a:hover svg {
+            transform: translateX(-4px);
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 28px;
+            left: clamp(24px, 5vw, 80px);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(242,239,233,0.3);
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+        }
+
+        .hero-scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+            position: relative;
+        }
+
+        .hero-scroll-dot {
+            position: absolute;
+            top: 0;
+            left: -2px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ===== TICKER ===== */
+        .ticker {
+            background: var(--black);
+            border-top: 1px solid rgba(242,239,233,0.06);
+            border-bottom: 1px solid rgba(242,239,233,0.06);
+            padding: 20px 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .ticker-track {
+            display: inline-flex;
+            animation: ticker 35s linear infinite;
+        }
+
+        .ticker-item {
+            font-family: var(--serif);
+            font-size: 16px;
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(242,239,233,0.25);
+            padding: 0 48px;
+            position: relative;
+        }
+
+        .ticker-item::before {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            border: 1px solid rgba(196,162,101,0.3);
+            transform: translateY(-50%);
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ===== ABOUT SPLIT ===== */
+        .about {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+        }
+
+        .about-image {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             will-change: transform;
         }
 
-        .hero-overlay {
+        .about-image-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(
-                to top,
-                rgba(10, 6, 2, 0.85) 0%,
-                rgba(10, 6, 2, 0.4) 40%,
-                rgba(10, 6, 2, 0.15) 70%,
-                rgba(10, 6, 2, 0.1) 100%
-            );
+            background: linear-gradient(135deg, rgba(10,10,10,0.3), transparent 60%);
         }
 
-        .hero-content {
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: clamp(40px, 8vw, 120px);
+            background: var(--off-white);
             position: relative;
-            z-index: 2;
-            padding: 0 48px 80px;
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
         }
 
-        .hero-eyebrow {
+        .about-content::before {
+            content: '';
+            position: absolute;
+            top: 80px;
+            right: 80px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--accent-dim);
+            filter: blur(60px);
+            pointer-events: none;
+        }
+
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 400;
+            margin-bottom: 24px;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            color: var(--gold);
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 24px;
+            gap: 16px;
         }
 
-        .hero-eyebrow-line {
+        .section-label-line {
             width: 40px;
             height: 1px;
-            background: var(--gold);
+            background: var(--accent);
         }
 
-        .hero-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(42px, 7vw, 88px);
-            color: white;
-            line-height: 1.05;
-            font-weight: 400;
-            margin-bottom: 28px;
-            max-width: 800px;
-        }
-
-        .hero-title em {
-            font-style: italic;
-            color: var(--gold);
-        }
-
-        .hero-desc {
-            font-size: 17px;
-            color: rgba(255,255,255,0.65);
+        .about-heading {
+            font-family: var(--serif);
+            font-size: clamp(36px, 5vw, 64px);
             font-weight: 300;
-            line-height: 1.7;
-            max-width: 440px;
-            margin-bottom: 40px;
+            line-height: 1.15;
+            margin-bottom: 32px;
+            color: var(--black);
         }
 
-        .hero-actions {
-            display: flex;
-            gap: 16px;
-            align-items: center;
+        .about-heading em {
+            font-style: italic;
+            color: var(--accent);
         }
 
-        .btn-fill {
-            display: inline-block;
-            padding: 16px 40px;
-            background: var(--gold);
-            color: var(--coffee);
-            border: none;
-            font-size: 14px;
-            font-weight: 700;
-            font-family: 'Heebo', sans-serif;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: transform 0.3s, box-shadow 0.3s;
+        .about-text {
+            font-size: 16px;
+            color: var(--text-light);
+            line-height: 1.9;
+            font-weight: 300;
+            margin-bottom: 48px;
+            max-width: 420px;
         }
 
-        .btn-fill:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(184, 149, 106, 0.35);
-        }
-
-        .btn-ghost {
-            display: inline-block;
-            padding: 16px 32px;
-            background: transparent;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.25);
-            font-size: 14px;
-            font-weight: 500;
-            font-family: 'Heebo', sans-serif;
-            cursor: pointer;
-            text-decoration: none;
-            transition: border-color 0.3s;
-        }
-
-        .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
-
-        .hero-scroll-hint {
-            position: absolute;
-            bottom: 32px;
-            left: 48px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: rgba(255,255,255,0.4);
-            font-size: 11px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            z-index: 2;
-        }
-
-        .hero-scroll-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--gold);
-        }
-
-        /* ===== MARQUEE ===== */
-        .marquee-strip {
-            background: var(--coffee);
-            padding: 18px 0;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .marquee-track {
-            display: inline-flex;
-            gap: 60px;
-            animation: marquee 30s linear infinite;
-        }
-
-        .marquee-item {
-            font-size: 13px;
-            color: var(--gold);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-weight: 400;
-            display: inline-flex;
-            align-items: center;
-            gap: 60px;
-        }
-
-        .marquee-item::after {
-            content: '';
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: var(--gold-dark);
-        }
-
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* ===== INTRO ===== */
-        .intro {
-            padding: 160px 48px;
-            max-width: 1400px;
-            margin: 0 auto;
+        .about-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 100px;
-            align-items: center;
+            gap: 32px;
         }
 
-        .intro-visual {
-            position: relative;
+        .about-detail {
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.08);
         }
 
-        .intro-img-main {
-            width: 100%;
-            aspect-ratio: 4/5;
-            object-fit: cover;
-        }
-
-        .intro-img-float {
-            position: absolute;
-            bottom: -40px;
-            left: -40px;
-            width: 200px;
-            height: 260px;
-            object-fit: cover;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-        }
-
-        .intro-float-badge {
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            width: 100px;
-            height: 100px;
-            background: var(--gold);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .intro-float-badge .num {
-            font-family: 'Playfair Display', serif;
-            font-size: 32px;
-            color: var(--coffee);
+        .about-detail-num {
+            font-family: var(--serif);
+            font-size: 42px;
+            font-weight: 300;
+            color: var(--black);
             line-height: 1;
+            margin-bottom: 6px;
         }
 
-        .intro-float-badge .lbl {
-            font-size: 10px;
-            color: var(--coffee);
-            font-weight: 500;
-        }
-
-        .intro-eyebrow {
+        .about-detail-label {
             font-size: 12px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--gold);
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-
-        .intro-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(32px, 3.5vw, 48px);
-            font-weight: 400;
-            line-height: 1.2;
-            margin-bottom: 24px;
-            color: var(--coffee);
-        }
-
-        .intro-text {
-            font-size: 16px;
-            color: var(--text-muted);
-            line-height: 1.85;
-            margin-bottom: 40px;
-        }
-
-        .intro-features {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .intro-feat {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-        }
-
-        .intro-feat-icon {
-            width: 44px;
-            height: 44px;
-            min-width: 44px;
-            background: rgba(184, 149, 106, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .intro-feat-content h4 {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--coffee);
-            margin-bottom: 4px;
-        }
-
-        .intro-feat-content p {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        /* ===== STATS BAR ===== */
-        .stats-bar {
-            background: var(--cream);
-            padding: 80px 48px;
-        }
-
-        .stats-bar-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 40px;
-        }
-
-        .stat {
-            text-align: center;
-            position: relative;
-        }
-
-        .stat:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 1px;
-            height: 40px;
-            background: rgba(0,0,0,0.08);
-        }
-
-        .stat-num {
-            font-family: 'Playfair Display', serif;
-            font-size: 48px;
-            font-weight: 400;
-            color: var(--coffee);
-            line-height: 1;
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
+            color: var(--text-light);
+            letter-spacing: 1px;
         }
 
         /* ===== MENU ===== */
-        .menu-section {
-            padding: 160px 48px;
-            max-width: 1400px;
-            margin: 0 auto;
+        .menu {
+            padding: clamp(80px, 12vh, 200px) clamp(24px, 5vw, 80px);
+            background: var(--black);
+            position: relative;
         }
 
-        .section-eyebrow {
-            font-size: 12px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--gold);
-            font-weight: 500;
-            margin-bottom: 16px;
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 80px;
+            gap: 40px;
         }
 
-        .section-heading {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(32px, 4vw, 52px);
-            font-weight: 400;
-            color: var(--coffee);
-            margin-bottom: 16px;
+        .menu-heading {
+            font-family: var(--serif);
+            font-size: clamp(36px, 6vw, 80px);
+            font-weight: 300;
+            color: var(--off-white);
+            line-height: 1.05;
         }
 
-        .section-desc {
-            font-size: 16px;
-            color: var(--text-muted);
-            max-width: 480px;
+        .menu-heading em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .menu-sub {
+            font-size: 14px;
+            color: rgba(242,239,233,0.35);
+            font-weight: 300;
+            max-width: 300px;
             line-height: 1.7;
-            margin-bottom: 60px;
+            text-align: left;
+            flex-shrink: 0;
         }
 
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+            gap: 2px;
         }
 
-        .menu-card {
+        .menu-item {
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            group: true;
-        }
-
-        .menu-card-img {
-            width: 100%;
             aspect-ratio: 3/4;
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .menu-card:hover .menu-card-img {
-            transform: scale(1.06);
+        .menu-item:hover img {
+            transform: scale(1.08);
         }
 
-        .menu-card-overlay {
+        .menu-item-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(10,6,2,0.8) 0%, transparent 60%);
-            transition: opacity 0.4s;
+            background: linear-gradient(to top,
+                rgba(10,10,10,0.9) 0%,
+                rgba(10,10,10,0.3) 40%,
+                rgba(10,10,10,0.05) 100%
+            );
+            transition: background 0.4s;
         }
 
-        .menu-card-info {
+        .menu-item:hover .menu-item-overlay {
+            background: linear-gradient(to top,
+                rgba(10,10,10,0.95) 0%,
+                rgba(10,10,10,0.5) 50%,
+                rgba(10,10,10,0.2) 100%
+            );
+        }
+
+        .menu-item-content {
             position: absolute;
             bottom: 0;
             right: 0;
             left: 0;
-            padding: 28px;
+            padding: clamp(20px, 3vw, 36px);
         }
 
-        .menu-card-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            color: white;
-            margin-bottom: 6px;
-        }
-
-        .menu-card-desc {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-            line-height: 1.5;
+        .menu-item-tag {
+            display: inline-block;
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            border: 1px solid rgba(196,162,101,0.3);
+            padding: 4px 12px;
             margin-bottom: 12px;
         }
 
-        .menu-card-price {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--gold);
+        .menu-item-name {
+            font-family: var(--serif);
+            font-size: clamp(20px, 2.5vw, 28px);
+            color: var(--off-white);
+            font-weight: 300;
+            margin-bottom: 8px;
         }
 
-        .menu-card-tag {
+        .menu-item-desc {
+            font-size: 13px;
+            color: rgba(242,239,233,0.4);
+            font-weight: 300;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            max-width: 260px;
+        }
+
+        .menu-item-price {
+            font-family: var(--serif);
+            font-size: 24px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .menu-item-price span {
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        .menu-item-line {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            padding: 6px 14px;
-            background: var(--gold);
-            color: var(--coffee);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .menu-item:hover .menu-item-line {
+            width: 100%;
         }
 
         /* ===== HORIZONTAL GALLERY ===== */
-        .gallery-strip {
-            padding: 60px 0;
+        .hgallery {
+            padding: clamp(60px, 8vh, 120px) 0;
+            background: var(--off-white);
             overflow: hidden;
         }
 
-        .gallery-track {
+        .hgallery-track {
             display: flex;
-            gap: 16px;
-            animation: gallery-scroll 40s linear infinite;
+            gap: clamp(12px, 2vw, 24px);
+            will-change: transform;
         }
 
-        .gallery-track img {
-            height: 300px;
-            width: auto;
-            object-fit: cover;
+        .hgallery-item {
             flex-shrink: 0;
+            width: clamp(250px, 30vw, 400px);
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            position: relative;
         }
 
-        @keyframes gallery-scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        .hgallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+
+        .hgallery-item:hover img {
+            transform: scale(1.04);
         }
 
         /* ===== EXPERIENCE ===== */
-        .experience-section {
-            padding: 160px 48px;
-            background: var(--coffee);
+        .experience {
+            padding: clamp(80px, 12vh, 200px) clamp(24px, 5vw, 80px);
+            background: var(--cream);
             position: relative;
             overflow: hidden;
         }
 
-        .experience-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 100px;
-            align-items: center;
-        }
-
-        .exp-content .section-eyebrow { color: var(--gold); }
-
-        .exp-content .section-heading {
-            color: white;
-        }
-
-        .exp-content .section-desc {
-            color: rgba(255,255,255,0.5);
-        }
-
-        .exp-features-list {
-            display: flex;
-            flex-direction: column;
-            gap: 28px;
-        }
-
-        .exp-feat-row {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding-bottom: 28px;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-        }
-
-        .exp-feat-num {
-            font-family: 'Playfair Display', serif;
-            font-size: 36px;
-            color: rgba(184, 149, 106, 0.3);
-            min-width: 50px;
-        }
-
-        .exp-feat-text h4 {
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 4px;
-        }
-
-        .exp-feat-text p {
-            font-size: 14px;
-            color: rgba(255,255,255,0.45);
-            line-height: 1.6;
-        }
-
-        .exp-visual {
-            position: relative;
-        }
-
-        .exp-img {
-            width: 100%;
-            aspect-ratio: 4/5;
-            object-fit: cover;
-        }
-
-        .exp-img-accent {
+        .experience::before {
+            content: '"';
             position: absolute;
-            inset: -20px;
-            border: 1px solid rgba(184, 149, 106, 0.2);
+            top: -60px;
+            right: 40px;
+            font-family: var(--serif);
+            font-size: 400px;
+            color: rgba(196,162,101,0.06);
             pointer-events: none;
+            line-height: 1;
+        }
+
+        .experience-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .experience-heading {
+            font-family: var(--serif);
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 300;
+            line-height: 1.3;
+            color: var(--black);
+            margin-bottom: 48px;
+        }
+
+        .experience-heading em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .experience-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+            text-align: center;
+        }
+
+        .experience-item {
+            position: relative;
+            padding-top: 24px;
+        }
+
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 32px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .experience-item h4 {
+            font-family: var(--serif);
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 12px;
+        }
+
+        .experience-item p {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.8;
+            font-weight: 300;
         }
 
         /* ===== TESTIMONIALS ===== */
-        .testimonials-section {
-            padding: 160px 48px;
-            max-width: 1400px;
-            margin: 0 auto;
+        .testimonials {
+            padding: clamp(80px, 12vh, 200px) clamp(24px, 5vw, 80px);
+            background: var(--off-white);
+        }
+
+        .testimonials-heading {
+            font-family: var(--serif);
+            font-size: clamp(36px, 6vw, 72px);
+            font-weight: 300;
+            color: var(--black);
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .testimonials-heading em {
+            font-style: italic;
+            color: var(--accent);
         }
 
         .testimonials-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 32px;
-            margin-top: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .test-card {
-            padding: 40px;
+        .testi-card {
             background: white;
-            border: 1px solid rgba(0,0,0,0.04);
+            padding: clamp(28px, 3vw, 48px);
             position: relative;
+            border: 1px solid rgba(0,0,0,0.04);
             transition: transform 0.4s, box-shadow 0.4s;
         }
 
-        .test-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+        .testi-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.06);
         }
 
-        .test-stars {
+        .testi-card::before {
+            content: '"';
+            font-family: var(--serif);
+            font-size: 80px;
+            color: var(--accent-dim);
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            line-height: 1;
+        }
+
+        .testi-stars {
             display: flex;
-            gap: 2px;
-            margin-bottom: 24px;
+            gap: 3px;
+            margin-bottom: 20px;
         }
 
-        .test-star {
-            width: 14px;
-            height: 14px;
-            fill: var(--gold);
+        .testi-star {
+            width: 12px;
+            height: 12px;
+            fill: var(--accent);
         }
 
-        .test-quote {
-            font-size: 16px;
+        .testi-quote {
+            font-size: 15px;
             color: var(--text);
-            line-height: 1.75;
+            line-height: 1.8;
+            font-weight: 300;
             margin-bottom: 28px;
-            font-style: italic;
         }
 
-        .test-author {
-            display: flex;
-            align-items: center;
-            gap: 14px;
+        .testi-line {
+            width: 32px;
+            height: 1px;
+            background: var(--accent);
+            margin-bottom: 20px;
         }
 
-        .test-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .test-name {
+        .testi-name {
             font-weight: 700;
             font-size: 14px;
-            color: var(--coffee);
+            color: var(--black);
         }
 
-        .test-role {
-            font-size: 13px;
-            color: var(--text-muted);
+        .testi-role {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
         }
-
-        .test-accent-line {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 60px;
-            height: 3px;
-            background: var(--gold);
-            transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.4s;
-        }
-
-        .test-card:hover .test-accent-line { transform: scaleX(1); }
 
         /* ===== CTA ===== */
-        .cta-section {
+        .cta {
             position: relative;
-            height: 70vh;
-            min-height: 500px;
+            min-height: 70vh;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            background: var(--black);
         }
 
         .cta-bg {
@@ -790,108 +870,116 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .cta-bg-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(10, 6, 2, 0.75);
+            opacity: 0.3;
+            will-change: transform;
         }
 
         .cta-content {
             position: relative;
             z-index: 2;
             text-align: center;
-            max-width: 600px;
             padding: 0 24px;
         }
 
-        .cta-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(32px, 4.5vw, 52px);
-            color: white;
-            font-weight: 400;
-            line-height: 1.2;
-            margin-bottom: 20px;
+        .cta-heading {
+            font-family: var(--serif);
+            font-size: clamp(36px, 7vw, 80px);
+            font-weight: 300;
+            color: var(--off-white);
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .cta-heading em {
+            font-style: italic;
+            color: var(--accent);
         }
 
         .cta-text {
-            font-size: 16px;
-            color: rgba(255,255,255,0.55);
-            line-height: 1.7;
-            margin-bottom: 36px;
+            font-size: 15px;
+            color: rgba(242,239,233,0.4);
+            font-weight: 300;
+            max-width: 420px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
         }
 
         .cta-form {
             display: flex;
-            gap: 0;
-            max-width: 440px;
+            max-width: 420px;
             margin: 0 auto;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(242,239,233,0.12);
+            overflow: hidden;
         }
 
         .cta-input {
             flex: 1;
-            padding: 16px 20px;
-            background: transparent;
+            padding: 18px 24px;
+            background: rgba(242,239,233,0.04);
             border: none;
-            color: white;
+            color: var(--off-white);
             font-size: 14px;
-            font-family: 'Heebo', sans-serif;
+            font-family: var(--sans);
             outline: none;
+            font-weight: 300;
         }
 
-        .cta-input::placeholder { color: rgba(255,255,255,0.3); }
+        .cta-input::placeholder { color: rgba(242,239,233,0.2); }
 
-        .cta-submit {
-            padding: 16px 28px;
-            background: var(--gold);
-            color: var(--coffee);
+        .cta-btn {
+            padding: 18px 32px;
+            background: var(--accent);
+            color: var(--black);
             border: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            font-family: 'Heebo', sans-serif;
+            font-family: var(--sans);
             cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             transition: background 0.3s;
             white-space: nowrap;
         }
 
-        .cta-submit:hover { background: #c9a577; }
+        .cta-btn:hover { background: #d4b275; }
 
         /* ===== FOOTER ===== */
         .footer {
-            background: var(--coffee);
-            padding: 80px 48px 40px;
+            background: var(--black);
+            border-top: 1px solid rgba(242,239,233,0.06);
+            padding: 80px clamp(24px, 5vw, 80px) 40px;
         }
 
-        .footer-inner {
-            max-width: 1200px;
-            margin: 0 auto;
+        .footer-top {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto 60px;
         }
 
-        .footer-brand {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            color: white;
+        .footer-logo {
+            font-family: var(--serif);
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--off-white);
             margin-bottom: 16px;
         }
 
-        .footer-desc {
+        .footer-tagline {
             font-size: 14px;
-            color: rgba(255,255,255,0.4);
+            color: rgba(242,239,233,0.3);
             line-height: 1.7;
+            font-weight: 300;
             max-width: 280px;
         }
 
         .footer-col-title {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--gold);
-            letter-spacing: 2px;
+            font-size: 10px;
+            letter-spacing: 3px;
             text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 400;
             margin-bottom: 20px;
         }
 
@@ -899,452 +987,443 @@
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .footer-links a {
-            color: rgba(255,255,255,0.4);
+            color: rgba(242,239,233,0.3);
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 300;
             transition: color 0.3s;
         }
 
-        .footer-links a:hover { color: var(--gold); }
+        .footer-links a:hover { color: var(--accent); }
 
         .footer-bottom {
             max-width: 1200px;
-            margin: 60px auto 0;
+            margin: 0 auto;
             padding-top: 24px;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid rgba(242,239,233,0.06);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .footer-copy {
-            font-size: 12px;
-            color: rgba(255,255,255,0.25);
+            font-size: 11px;
+            color: rgba(242,239,233,0.15);
+            letter-spacing: 1px;
         }
 
         .footer-socials {
             display: flex;
-            gap: 20px;
+            gap: 24px;
         }
 
         .footer-socials a {
-            color: rgba(255,255,255,0.3);
+            color: rgba(242,239,233,0.2);
             transition: color 0.3s;
         }
 
-        .footer-socials a:hover { color: var(--gold); }
+        .footer-socials a:hover { color: var(--accent); }
+
+        /* ===== MOBILE MENU ===== */
+        .mobile-menu {
+            position: fixed;
+            inset: 0;
+            background: var(--black);
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+
+        .mobile-menu.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .mobile-menu a {
+            font-family: var(--serif);
+            font-size: 32px;
+            color: var(--off-white);
+            text-decoration: none;
+            font-weight: 300;
+            transition: color 0.3s;
+        }
+
+        .mobile-menu a:hover { color: var(--accent); }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
-            .intro { grid-template-columns: 1fr; gap: 60px; }
-            .intro-visual { max-width: 500px; }
-            .experience-inner { grid-template-columns: 1fr; gap: 60px; }
-            .exp-visual { max-width: 500px; order: -1; }
+            .about { grid-template-columns: 1fr; }
+            .about-image { min-height: 50vh; }
             .menu-grid { grid-template-columns: repeat(2, 1fr); }
-            .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
-            .stats-bar-inner { grid-template-columns: repeat(2, 1fr); gap: 40px 20px; }
-            .stat:nth-child(2)::after { display: none; }
-            .footer-inner { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+            .experience-list { grid-template-columns: 1fr; gap: 40px; }
+            .testimonials-grid { grid-template-columns: 1fr; max-width: 480px; }
+            .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
         }
 
         @media (max-width: 768px) {
+            .cursor { display: none; }
             .nav { padding: 16px 20px; }
-            .nav.solid { padding: 14px 20px; }
+            .nav.scrolled { padding: 12px 20px; }
             .nav-links { display: none; }
-            .nav-mobile-toggle { display: block; }
+            .nav-burger { display: flex; }
 
-            .hero { min-height: 100svh; align-items: flex-end; }
-            .hero-content { padding: 0 20px 60px; }
-            .hero-title { font-size: clamp(36px, 10vw, 56px); max-width: 100%; }
-            .hero-desc { font-size: 15px; max-width: 100%; }
-            .hero-actions { flex-direction: column; align-items: stretch; }
-            .hero-actions .btn-fill,
-            .hero-actions .btn-ghost { text-align: center; }
-            .hero-scroll-hint { display: none; }
+            .hero-content { padding: 0 20px 40px; }
+            .hero-bottom { flex-direction: column; align-items: flex-start; gap: 24px; }
+            .hero-scroll { display: none; }
 
-            .intro { padding: 80px 20px; gap: 48px; }
-            .intro-img-float { width: 140px; height: 180px; bottom: -20px; left: -10px; }
-            .intro-float-badge { width: 80px; height: 80px; top: -10px; right: -10px; }
-            .intro-float-badge .num { font-size: 24px; }
+            .about-content { padding: 48px 24px; }
+            .about-details { gap: 20px; }
 
-            .stats-bar { padding: 60px 20px; }
-            .stats-bar-inner { grid-template-columns: repeat(2, 1fr); }
-            .stat::after { display: none !important; }
-            .stat-num { font-size: 36px; }
+            .menu { padding: 60px 16px; }
+            .menu-header { flex-direction: column; align-items: flex-start; margin-bottom: 48px; }
+            .menu-grid { grid-template-columns: 1fr; gap: 16px; }
+            .menu-item { aspect-ratio: 4/3; }
 
-            .menu-section { padding: 80px 20px; }
-            .menu-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .hgallery { padding: 40px 0; }
+            .hgallery-item { width: 220px; }
 
-            .experience-section { padding: 80px 20px; }
-            .experience-inner { gap: 48px; }
+            .experience { padding: 60px 24px; }
 
-            .testimonials-section { padding: 80px 20px; }
-            .testimonials-grid { grid-template-columns: 1fr; }
-            .test-card { padding: 28px; }
+            .testimonials { padding: 60px 20px; }
+            .testimonials-heading { margin-bottom: 48px; }
 
-            .cta-section { height: 60vh; }
-            .cta-form { flex-direction: column; border: none; }
-            .cta-input { border: 1px solid rgba(255,255,255,0.2); margin-bottom: 8px; }
+            .cta { min-height: 60vh; }
+            .cta-form { flex-direction: column; border: none; gap: 8px; }
+            .cta-input { border: 1px solid rgba(242,239,233,0.12); }
 
-            .footer { padding: 60px 20px 30px; }
-            .footer-inner { grid-template-columns: 1fr; gap: 32px; }
-
-            .gallery-track img { height: 200px; }
+            .footer-top { grid-template-columns: 1fr; gap: 28px; }
+            .footer-bottom { flex-direction: column; gap: 16px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- CURSOR -->
+    <div class="cursor" id="cursor"></div>
+
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-text">Brew & Soul</div>
+        <div class="preloader-line"></div>
+    </div>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#about" onclick="closeMobile()">הסיפור</a>
+        <a href="#menu-section" onclick="closeMobile()">תפריט</a>
+        <a href="#experience" onclick="closeMobile()">חוויה</a>
+        <a href="#testimonials" onclick="closeMobile()">לקוחות</a>
+        <a href="#reserve" onclick="closeMobile()">הזמנת מקום</a>
+    </div>
+
     <!-- NAV -->
     <nav class="nav" id="nav">
-        <a href="#" class="nav-logo">Brew & Soul</a>
+        <a href="#" class="nav-logo">B&S</a>
         <ul class="nav-links">
-            <li><a href="#intro">הסיפור</a></li>
-            <li><a href="#menu">תפריט</a></li>
+            <li><a href="#about">הסיפור</a></li>
+            <li><a href="#menu-section">תפריט</a></li>
             <li><a href="#experience">חוויה</a></li>
             <li><a href="#testimonials">לקוחות</a></li>
-            <li><a href="#cta" class="nav-cta-btn">הזמנת שולחן</a></li>
+            <li><a href="#reserve" class="nav-reserve">הזמנת מקום</a></li>
         </ul>
-        <button class="nav-mobile-toggle" id="mobileToggle" aria-label="תפריט">
-            <span></span><span></span><span></span>
+        <button class="nav-burger" id="burger" aria-label="תפריט">
+            <span></span><span></span>
         </button>
     </nav>
 
     <!-- HERO -->
     <section class="hero">
-        <div class="hero-image-wrap">
-            <img class="hero-image" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1800&q=85&auto=format" alt="Brew and Soul coffee shop interior">
-            <div class="hero-overlay"></div>
+        <div class="hero-bg">
+            <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=1800&q=85&auto=format" alt="Coffee">
         </div>
         <div class="hero-content">
-            <div class="hero-eyebrow visibility-hidden">
-                <span class="hero-eyebrow-line"></span>
-                <span>בוטיק קפה | תל אביב</span>
+            <div class="hero-label">
+                <span class="hero-label-line"></span>
+                <span>בוטיק קפה תל אביב</span>
             </div>
-            <h1 class="hero-title visibility-hidden">
-                כל כוס<br>מספרת <em>סיפור</em>
+            <h1 class="hero-heading">
+                <span class="line"><span class="line-inner">כל כוס</span></span>
+                <span class="line"><span class="line-inner">מספרת</span></span>
+                <span class="line"><span class="line-inner"><em>סיפור</em></span></span>
             </h1>
-            <p class="hero-desc visibility-hidden">
-                פולים שנבחרו ביד, קלייה מקומית, ואווירה שגורמת לך לשכוח מהזמן. בואו לטעום את ההבדל.
-            </p>
-            <div class="hero-actions visibility-hidden">
-                <a href="#menu" class="btn-fill">גלו את התפריט</a>
-                <a href="#cta" class="btn-ghost">הזמנת מקום</a>
+            <div class="hero-bottom">
+                <p class="hero-desc">פולים שנבחרו ביד מחוות קפה בברזיל ואתיופיה.<br>קלייה מקומית כל שבוע. אווירה שלא תמצאו במקום אחר.</p>
+                <div class="hero-cta">
+                    <a href="#menu-section">
+                        גלו את התפריט
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </a>
+                </div>
             </div>
         </div>
-        <div class="hero-scroll-hint">
-            <div class="hero-scroll-dot"></div>
-            <span>SCROLL</span>
+        <div class="hero-scroll">
+            <span>גלול</span>
+            <div class="hero-scroll-line">
+                <div class="hero-scroll-dot"></div>
+            </div>
         </div>
     </section>
 
-    <!-- MARQUEE -->
-    <div class="marquee-strip">
-        <div class="marquee-track">
-            <span class="marquee-item">קלייה מקומית</span>
-            <span class="marquee-item">Single Origin</span>
-            <span class="marquee-item">פולי ברזיל</span>
-            <span class="marquee-item">אתיופיה Yirgacheffe</span>
-            <span class="marquee-item">קולומביה Supremo</span>
-            <span class="marquee-item">Pour Over</span>
-            <span class="marquee-item">V60</span>
-            <span class="marquee-item">Cold Brew</span>
-            <span class="marquee-item">קלייה מקומית</span>
-            <span class="marquee-item">Single Origin</span>
-            <span class="marquee-item">פולי ברזיל</span>
-            <span class="marquee-item">אתיופיה Yirgacheffe</span>
-            <span class="marquee-item">קולומביה Supremo</span>
-            <span class="marquee-item">Pour Over</span>
-            <span class="marquee-item">V60</span>
-            <span class="marquee-item">Cold Brew</span>
+    <!-- TICKER -->
+    <div class="ticker">
+        <div class="ticker-track">
+            <span class="ticker-item">Single Origin</span>
+            <span class="ticker-item">קלייה מקומית</span>
+            <span class="ticker-item">Pour Over</span>
+            <span class="ticker-item">אתיופיה Yirgacheffe</span>
+            <span class="ticker-item">Cold Brew 24h</span>
+            <span class="ticker-item">V60</span>
+            <span class="ticker-item">ברזיל Cerrado</span>
+            <span class="ticker-item">Specialty Coffee</span>
+            <span class="ticker-item">Single Origin</span>
+            <span class="ticker-item">קלייה מקומית</span>
+            <span class="ticker-item">Pour Over</span>
+            <span class="ticker-item">אתיופיה Yirgacheffe</span>
+            <span class="ticker-item">Cold Brew 24h</span>
+            <span class="ticker-item">V60</span>
+            <span class="ticker-item">ברזיל Cerrado</span>
+            <span class="ticker-item">Specialty Coffee</span>
         </div>
     </div>
 
-    <!-- INTRO -->
-    <section class="intro" id="intro">
-        <div class="intro-visual">
-            <img class="intro-img-main" src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&q=80&auto=format" alt="Coffee beans being roasted">
-            <img class="intro-img-float" src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80&auto=format" alt="Latte art cup">
-            <div class="intro-float-badge">
-                <span class="num">7+</span>
-                <span class="lbl">שנות קלייה</span>
-            </div>
+    <!-- ABOUT -->
+    <section class="about" id="about">
+        <div class="about-image">
+            <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1000&q=80&auto=format" alt="Coffee roasting">
+            <div class="about-image-overlay"></div>
         </div>
-        <div class="intro-content">
-            <div class="intro-eyebrow">הסיפור שלנו</div>
-            <h2 class="intro-title">יותר מקפה.<br>זו אומנות.</h2>
-            <p class="intro-text">
-                התחלנו ב-2019 מתשוקה לדבר האמיתי. כל פול נבחר בעצמנו מחוות קפה ברחבי העולם, הקלייה מתבצעת אצלנו במקום, והברמנים עוברים הכשרה של חצי שנה לפני הכוס הראשונה.
+        <div class="about-content">
+            <div class="section-label">
+                <span class="section-label-line"></span>
+                הסיפור שלנו
+            </div>
+            <h2 class="about-heading">
+                יותר מקפה.<br>
+                זו <em>אומנות.</em>
+            </h2>
+            <p class="about-text">
+                התחלנו ב-2019 מתשוקה לדבר האמיתי. כל פול נבחר בעצמנו, הקלייה מתבצעת אצלנו במקום, והברמנים עוברים הכשרה של חצי שנה לפני שהם מכינים את הכוס הראשונה.
             </p>
-            <div class="intro-features">
-                <div class="intro-feat">
-                    <div class="intro-feat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8956a" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    </div>
-                    <div class="intro-feat-content">
-                        <h4>קלייה במקום</h4>
-                        <p>פולים טריים כל שבוע. אצווה חדשה כל יום שני.</p>
-                    </div>
+            <div class="about-details">
+                <div class="about-detail">
+                    <div class="about-detail-num counter" data-target="12500">0</div>
+                    <div class="about-detail-label">כוסות בחודש</div>
                 </div>
-                <div class="intro-feat">
-                    <div class="intro-feat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8956a" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    </div>
-                    <div class="intro-feat-content">
-                        <h4>אווירה ייחודית</h4>
-                        <p>עיצוב שמערבב מזרח תיכוני עם מינימליזם סקנדינבי.</p>
-                    </div>
+                <div class="about-detail">
+                    <div class="about-detail-num counter" data-target="98">0</div>
+                    <div class="about-detail-label">% שביעות רצון</div>
                 </div>
-                <div class="intro-feat">
-                    <div class="intro-feat-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8956a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                    </div>
-                    <div class="intro-feat-content">
-                        <h4>פתוח עד מאוחר</h4>
-                        <p>עד חצות בימי חול, עד 2:00 בלילה בסופ"ש.</p>
-                    </div>
+                <div class="about-detail">
+                    <div class="about-detail-num counter" data-target="15">0</div>
+                    <div class="about-detail-label">סוגי פולים</div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- STATS -->
-    <section class="stats-bar" id="stats">
-        <div class="stats-bar-inner">
-            <div class="stat">
-                <div class="stat-num"><span class="counter" data-target="12500">0</span>+</div>
-                <div class="stat-label">כוסות בחודש</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num"><span class="counter" data-target="98">0</span>%</div>
-                <div class="stat-label">שביעות רצון</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num"><span class="counter" data-target="15">0</span></div>
-                <div class="stat-label">סוגי פולים</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num"><span class="counter" data-target="7">0</span></div>
-                <div class="stat-label">שנות ניסיון</div>
+                <div class="about-detail">
+                    <div class="about-detail-num counter" data-target="7">0</div>
+                    <div class="about-detail-label">שנות ניסיון</div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- MENU -->
-    <section class="menu-section" id="menu">
-        <div class="section-eyebrow">התפריט</div>
-        <h2 class="section-heading">הנבחרים שלנו</h2>
-        <p class="section-desc">כל משקה מוכן ברגע, בשיטה, ובאהבה. פולים שנבחרו בקפידה, חליטה מדויקת.</p>
+    <section class="menu" id="menu-section">
+        <div class="menu-header">
+            <h2 class="menu-heading">
+                הנבחרים<br>
+                <em>שלנו</em>
+            </h2>
+            <p class="menu-sub">כל משקה מוכן ברגע, בשיטה, ובאהבה.<br>פולים שנבחרו בקפידה, חליטה מדויקת.</p>
+        </div>
         <div class="menu-grid">
-            <div class="menu-card">
-                <img class="menu-card-img" src="https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=600&q=80&auto=format" alt="Espresso">
-                <div class="menu-card-overlay"></div>
-                <div class="menu-card-info">
-                    <h3 class="menu-card-name">אספרסו קלאסי</h3>
-                    <p class="menu-card-desc">שוט כפול, קרמה מושלמת, פולי ברזיל</p>
-                    <div class="menu-card-price">12 ש"ח</div>
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=600&q=80&auto=format" alt="Espresso">
+                <div class="menu-item-overlay"></div>
+                <div class="menu-item-content">
+                    <div class="menu-item-tag">הכי נמכר</div>
+                    <h3 class="menu-item-name">אספרסו קלאסי</h3>
+                    <p class="menu-item-desc">שוט כפול, קרמה מושלמת, פולי ברזיל Cerrado</p>
+                    <div class="menu-item-price">12 <span>ש"ח</span></div>
                 </div>
-                <div class="menu-card-tag">הכי נמכר</div>
+                <div class="menu-item-line"></div>
             </div>
-            <div class="menu-card">
-                <img class="menu-card-img" src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80&auto=format" alt="Matcha Latte">
-                <div class="menu-card-overlay"></div>
-                <div class="menu-card-info">
-                    <h3 class="menu-card-name">מאצ׳ה לאטה</h3>
-                    <p class="menu-card-desc">מאצ׳ה יפנית אותנטית, חלב שיבולת שועל</p>
-                    <div class="menu-card-price">22 ש"ח</div>
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80&auto=format" alt="Matcha">
+                <div class="menu-item-overlay"></div>
+                <div class="menu-item-content">
+                    <h3 class="menu-item-name">מאצ׳ה לאטה</h3>
+                    <p class="menu-item-desc">מאצ׳ה יפנית אותנטית, חלב שיבולת שועל</p>
+                    <div class="menu-item-price">22 <span>ש"ח</span></div>
                 </div>
+                <div class="menu-item-line"></div>
             </div>
-            <div class="menu-card">
-                <img class="menu-card-img" src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80&auto=format" alt="Cold Brew">
-                <div class="menu-card-overlay"></div>
-                <div class="menu-card-info">
-                    <h3 class="menu-card-name">Cold Brew מיוחד</h3>
-                    <p class="menu-card-desc">חליטה קרה 24 שעות, וניל מדגסקר</p>
-                    <div class="menu-card-price">26 ש"ח</div>
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80&auto=format" alt="Cold Brew">
+                <div class="menu-item-overlay"></div>
+                <div class="menu-item-content">
+                    <div class="menu-item-tag">חדש</div>
+                    <h3 class="menu-item-name">Cold Brew מיוחד</h3>
+                    <p class="menu-item-desc">חליטה קרה 24 שעות, וניל מדגסקר, קרח שחור</p>
+                    <div class="menu-item-price">26 <span>ש"ח</span></div>
                 </div>
-                <div class="menu-card-tag">חדש</div>
+                <div class="menu-item-line"></div>
             </div>
-            <div class="menu-card">
-                <img class="menu-card-img" src="https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&q=80&auto=format" alt="Cappuccino">
-                <div class="menu-card-overlay"></div>
-                <div class="menu-card-info">
-                    <h3 class="menu-card-name">קפוצ׳ינו איטלקי</h3>
-                    <p class="menu-card-desc">שליש אספרסו, שליש חלב, שליש קצף</p>
-                    <div class="menu-card-price">16 ש"ח</div>
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&q=80&auto=format" alt="Cappuccino">
+                <div class="menu-item-overlay"></div>
+                <div class="menu-item-content">
+                    <h3 class="menu-item-name">קפוצ׳ינו איטלקי</h3>
+                    <p class="menu-item-desc">שליש אספרסו, שליש חלב, שליש קצף משי</p>
+                    <div class="menu-item-price">16 <span>ש"ח</span></div>
                 </div>
+                <div class="menu-item-line"></div>
             </div>
-            <div class="menu-card">
-                <img class="menu-card-img" src="https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?w=600&q=80&auto=format" alt="Lavender Latte">
-                <div class="menu-card-overlay"></div>
-                <div class="menu-card-info">
-                    <h3 class="menu-card-name">לוונדר לאטה</h3>
-                    <p class="menu-card-desc">תמצית לוונדר צרפתית עם דבש</p>
-                    <div class="menu-card-price">24 ש"ח</div>
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?w=600&q=80&auto=format" alt="Lavender Latte">
+                <div class="menu-item-overlay"></div>
+                <div class="menu-item-content">
+                    <h3 class="menu-item-name">לוונדר לאטה</h3>
+                    <p class="menu-item-desc">תמצית לוונדר צרפתית עם דבש אורגני</p>
+                    <div class="menu-item-price">24 <span>ש"ח</span></div>
                 </div>
+                <div class="menu-item-line"></div>
             </div>
-            <div class="menu-card">
-                <img class="menu-card-img" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80&auto=format" alt="V60 Pour Over">
-                <div class="menu-card-overlay"></div>
-                <div class="menu-card-info">
-                    <h3 class="menu-card-name">V60 פילטר</h3>
-                    <p class="menu-card-desc">חליטה ידנית, פולי אתיופיה, Pour Over</p>
-                    <div class="menu-card-price">18 ש"ח</div>
+            <div class="menu-item">
+                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80&auto=format" alt="V60">
+                <div class="menu-item-overlay"></div>
+                <div class="menu-item-content">
+                    <h3 class="menu-item-name">V60 פילטר</h3>
+                    <p class="menu-item-desc">חליטה ידנית, פולי אתיופיה Yirgacheffe</p>
+                    <div class="menu-item-price">18 <span>ש"ח</span></div>
                 </div>
+                <div class="menu-item-line"></div>
             </div>
         </div>
     </section>
 
-    <!-- GALLERY STRIP -->
-    <div class="gallery-strip">
-        <div class="gallery-track">
-            <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500&q=75&auto=format" alt="Coffee shop atmosphere">
-            <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500&q=75&auto=format" alt="Barista at work">
-            <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?w=500&q=75&auto=format" alt="Coffee beans close-up">
-            <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefda?w=500&q=75&auto=format" alt="Latte art">
-            <img src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=500&q=75&auto=format" alt="Coffee equipment">
-            <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=500&q=75&auto=format" alt="Cozy corner">
-            <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500&q=75&auto=format" alt="Coffee shop atmosphere">
-            <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500&q=75&auto=format" alt="Barista at work">
-            <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?w=500&q=75&auto=format" alt="Coffee beans close-up">
-            <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefda?w=500&q=75&auto=format" alt="Latte art">
-            <img src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=500&q=75&auto=format" alt="Coffee equipment">
-            <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=500&q=75&auto=format" alt="Cozy corner">
+    <!-- HORIZONTAL GALLERY -->
+    <div class="hgallery">
+        <div class="hgallery-track" id="galleryTrack">
+            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500&q=75&auto=format" alt=""></div>
+            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500&q=75&auto=format" alt=""></div>
+            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?w=500&q=75&auto=format" alt=""></div>
+            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefda?w=500&q=75&auto=format" alt=""></div>
+            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=500&q=75&auto=format" alt=""></div>
+            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=500&q=75&auto=format" alt=""></div>
+            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=500&q=75&auto=format" alt=""></div>
+            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=500&q=75&auto=format" alt=""></div>
         </div>
     </div>
 
     <!-- EXPERIENCE -->
-    <section class="experience-section" id="experience">
+    <section class="experience" id="experience">
         <div class="experience-inner">
-            <div class="exp-content">
-                <div class="section-eyebrow">למה אנחנו</div>
-                <h2 class="section-heading">חוויה שלא תמצאו<br>במקום אחר</h2>
-                <p class="section-desc">לא סתם בית קפה. מקום שמבינים בו שקפה הוא אומנות, ושכל פרט קטן משנה.</p>
-                <div class="exp-features-list">
-                    <div class="exp-feat-row">
-                        <div class="exp-feat-num">01</div>
-                        <div class="exp-feat-text">
-                            <h4>קלייה במקום</h4>
-                            <p>כל אצווה נקלית אצלנו, כל שבוע, מפולים שנבחרו ביד.</p>
-                        </div>
-                    </div>
-                    <div class="exp-feat-row">
-                        <div class="exp-feat-num">02</div>
-                        <div class="exp-feat-text">
-                            <h4>סדנאות וטעימות</h4>
-                            <p>ערבי טעימות שבועיים, סדנאות חליטה, ומסע בעולם הקפה.</p>
-                        </div>
-                    </div>
-                    <div class="exp-feat-row">
-                        <div class="exp-feat-num">03</div>
-                        <div class="exp-feat-text">
-                            <h4>קהילה של אוהבי קפה</h4>
-                            <p>בואו להיות חלק ממשפחה שחיה ונושמת קפה.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="section-label" style="justify-content: center;">
+                <span class="section-label-line"></span>
+                למה אנחנו
             </div>
-            <div class="exp-visual">
-                <img class="exp-img" src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=800&q=80&auto=format" alt="Coffee experience">
-                <div class="exp-img-accent"></div>
+            <h2 class="experience-heading">
+                חוויה שלא תמצאו<br><em>במקום אחר</em>
+            </h2>
+            <div class="experience-list">
+                <div class="experience-item">
+                    <h4>קלייה במקום</h4>
+                    <p>כל אצווה נקלית אצלנו, כל שבוע מחדש. הפולים לא נוסעים רחוק.</p>
+                </div>
+                <div class="experience-item">
+                    <h4>סדנאות וטעימות</h4>
+                    <p>ערבי טעימות שבועיים, סדנאות חליטה, ומסע בעולם הקפה.</p>
+                </div>
+                <div class="experience-item">
+                    <h4>קהילה</h4>
+                    <p>בואו להיות חלק ממשפחה שחיה ונושמת קפה, כל יום.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- TESTIMONIALS -->
-    <section class="testimonials-section" id="testimonials">
-        <div class="section-eyebrow">לקוחות מספרים</div>
-        <h2 class="section-heading">הקפה מדבר בעד עצמו</h2>
+    <section class="testimonials" id="testimonials">
+        <h2 class="testimonials-heading">הקפה מדבר<br><em>בעד עצמו</em></h2>
         <div class="testimonials-grid">
-            <div class="test-card">
-                <div class="test-accent-line"></div>
-                <div class="test-stars">
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <div class="testi-card">
+                <div class="testi-stars">
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 </div>
-                <p class="test-quote">"הקפה הכי טוב בתל אביב, בלי שאלה. האספרסו שלהם שינה לי את הסטנדרט. אני מגיע כל בוקר כבר 3 שנים."</p>
-                <div class="test-author">
-                    <img class="test-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80&auto=format&fit=crop" alt="דניאל כהן">
-                    <div>
-                        <div class="test-name">דניאל כהן</div>
-                        <div class="test-role">מפתח תוכנה</div>
-                    </div>
-                </div>
+                <p class="testi-quote">הקפה הכי טוב בתל אביב, בלי שאלה. האספרסו שלהם שינה לי את הסטנדרט. מגיע כל בוקר כבר 3 שנים.</p>
+                <div class="testi-line"></div>
+                <div class="testi-name">דניאל כהן</div>
+                <div class="testi-role">מפתח תוכנה</div>
             </div>
-            <div class="test-card">
-                <div class="test-accent-line"></div>
-                <div class="test-stars">
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <div class="testi-card">
+                <div class="testi-stars">
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 </div>
-                <p class="test-quote">"המקום המושלם לעבודה מרחוק. WiFi מעולה, שקעים בכל שולחן, והצוות תמיד מחייך. הסלון השני שלי."</p>
-                <div class="test-author">
-                    <img class="test-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80&auto=format&fit=crop" alt="מיכל לוי">
-                    <div>
-                        <div class="test-name">מיכל לוי</div>
-                        <div class="test-role">מעצבת גרפית</div>
-                    </div>
-                </div>
+                <p class="testi-quote">המקום המושלם לעבודה מרחוק. WiFi מעולה, שקעים בכל שולחן, והצוות תמיד מחייך. הסלון השני שלי.</p>
+                <div class="testi-line"></div>
+                <div class="testi-name">מיכל לוי</div>
+                <div class="testi-role">מעצבת גרפית</div>
             </div>
-            <div class="test-card">
-                <div class="test-accent-line"></div>
-                <div class="test-stars">
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="test-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <div class="testi-card">
+                <div class="testi-stars">
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 </div>
-                <p class="test-quote">"סדנת הקפה שלהם פתחה לי עולם חדש. עכשיו אני מבינה את ההבדל בין פולים ושיטות חליטה. ממליצה בחום!"</p>
-                <div class="test-author">
-                    <img class="test-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80&auto=format&fit=crop" alt="שירה אברהם">
-                    <div>
-                        <div class="test-name">שירה אברהם</div>
-                        <div class="test-role">עורכת דין</div>
-                    </div>
-                </div>
+                <p class="testi-quote">סדנת הקפה שלהם פתחה לי עולם חדש. עכשיו אני מבינה את ההבדל בין פולים ושיטות חליטה. ממליצה בחום!</p>
+                <div class="testi-line"></div>
+                <div class="testi-name">שירה אברהם</div>
+                <div class="testi-role">עורכת דין</div>
             </div>
         </div>
     </section>
 
     <!-- CTA -->
-    <section class="cta-section" id="cta">
+    <section class="cta" id="reserve">
         <div class="cta-bg">
-            <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=1600&q=80&auto=format" alt="Coffee background">
-            <div class="cta-bg-overlay"></div>
+            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1600&q=80&auto=format" alt="">
         </div>
         <div class="cta-content">
-            <h2 class="cta-title">מוכנים לחוויה<br>שלא תשכחו?</h2>
-            <p class="cta-text">השאירו טלפון ונשמור לכם מקום. אפשר גם פשוט להגיע, אבל אנחנו אוהבים שיש שולחן מחכה.</p>
+            <h2 class="cta-heading">מוכנים<br>ל<em>חוויה?</em></h2>
+            <p class="cta-text">השאירו טלפון ונשמור לכם מקום.<br>אפשר גם פשוט להגיע, אבל אנחנו אוהבים שיש שולחן מחכה.</p>
             <form class="cta-form" onsubmit="event.preventDefault()">
-                <input type="tel" class="cta-input" placeholder="מספר טלפון" dir="ltr">
-                <button type="submit" class="cta-submit">שמרו לי מקום</button>
+                <input type="tel" class="cta-input" placeholder="050-000-0000" dir="ltr">
+                <button type="submit" class="cta-btn">שמרו לי</button>
             </form>
         </div>
     </section>
 
     <!-- FOOTER -->
     <footer class="footer">
-        <div class="footer-inner">
+        <div class="footer-top">
             <div>
-                <div class="footer-brand">Brew & Soul</div>
-                <p class="footer-desc">קפה בוטיק בלב תל אביב. קלייה מקומית, אווירה ייחודית, וקפה שלא תמצאו במקום אחר.</p>
+                <div class="footer-logo">Brew & Soul</div>
+                <p class="footer-tagline">קפה בוטיק בלב תל אביב. קלייה מקומית, אווירה ייחודית, וקפה שלא תמצאו במקום אחר.</p>
             </div>
             <div>
                 <div class="footer-col-title">ניווט</div>
                 <ul class="footer-links">
-                    <li><a href="#intro">הסיפור שלנו</a></li>
-                    <li><a href="#menu">תפריט</a></li>
+                    <li><a href="#about">הסיפור שלנו</a></li>
+                    <li><a href="#menu-section">תפריט</a></li>
                     <li><a href="#experience">חוויה</a></li>
                     <li><a href="#testimonials">לקוחות</a></li>
                 </ul>
@@ -1358,7 +1437,7 @@
                 </ul>
             </div>
             <div>
-                <div class="footer-col-title">יצירת קשר</div>
+                <div class="footer-col-title">בואו אלינו</div>
                 <ul class="footer-links">
                     <li><a href="#">דיזנגוף 99, תל אביב</a></li>
                     <li><a href="tel:031234567" dir="ltr">03 123 4567</a></li>
@@ -1367,367 +1446,224 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <span class="footer-copy">2026 Brew & Soul. All rights reserved.</span>
+            <span class="footer-copy">2026 BREW & SOUL</span>
             <div class="footer-socials">
                 <a href="#" aria-label="Instagram">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                 </a>
                 <a href="#" aria-label="Facebook">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                 </a>
                 <a href="#" aria-label="TikTok">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
                 </a>
             </div>
         </div>
     </footer>
 
-    <!-- GSAP + ScrollTrigger -->
+    <!-- GSAP -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
     <script>
-        gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger);
 
-        const mm = gsap.matchMedia();
+    // ===== CUSTOM CURSOR =====
+    const cursor = document.getElementById('cursor');
+    if (window.innerWidth > 768) {
+        let cx = 0, cy = 0, tx = 0, ty = 0;
+        document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+        function updateCursor() {
+            cx += (tx - cx) * 0.12;
+            cy += (ty - cy) * 0.12;
+            cursor.style.left = cx + 'px';
+            cursor.style.top = cy + 'px';
+            requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+        document.querySelectorAll('a, button, .menu-item').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        });
+    }
 
-        mm.add("(prefers-reduced-motion: no-preference)", () => {
+    // ===== MOBILE MENU =====
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+    burger.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+    });
+    function closeMobile() {
+        menuOpen = false;
+        mobileMenu.classList.remove('open');
+    }
 
-            // =====================
-            // HERO — Cinematic Entrance
-            // =====================
-            const heroTl = gsap.timeline({ delay: 0.3 });
-
-            // Parallax zoom on hero image
-            gsap.from(".hero-image", {
-                scale: 1.15,
-                duration: 2,
-                ease: "power2.out"
-            });
-
-            heroTl
-                .to(".hero-eyebrow", { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" })
-                .from(".hero-eyebrow-line", { width: 0, duration: 0.6, ease: "power2.inOut" }, "-=0.4")
-                .to(".hero-title", { autoAlpha: 1, duration: 1, ease: "power3.out" }, "-=0.3")
-                .to(".hero-desc", { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.5")
-                .to(".hero-actions", { autoAlpha: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.4");
-
-            // Set initial states
-            gsap.set(".hero-eyebrow", { autoAlpha: 0, y: 20 });
-            gsap.set(".hero-title", { autoAlpha: 0 });
-            gsap.set(".hero-desc", { autoAlpha: 0, y: 20 });
-            gsap.set(".hero-actions", { autoAlpha: 0, y: 20 });
-
-            // Re-run timeline
-            heroTl.restart();
-
-            // Scroll-linked hero parallax
-            gsap.to(".hero-image", {
-                y: 150,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".hero",
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-
-            // Fade hero content on scroll
-            gsap.to(".hero-content", {
-                autoAlpha: 0,
-                y: -50,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".hero",
-                    start: "60% top",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-
-            // =====================
-            // NAV — Solid on scroll
-            // =====================
-            ScrollTrigger.create({
-                start: "top -100",
-                onUpdate: self => {
-                    document.getElementById('nav').classList.toggle('solid', self.progress > 0);
-                }
-            });
-
-            // =====================
-            // INTRO — Layered reveal
-            // =====================
-            gsap.from(".intro-img-main", {
-                x: -60,
-                autoAlpha: 0,
-                duration: 1.2,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: ".intro",
-                    start: "top 70%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            gsap.from(".intro-img-float", {
-                y: 60,
-                autoAlpha: 0,
-                duration: 0.9,
-                delay: 0.3,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: ".intro",
-                    start: "top 70%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            gsap.from(".intro-float-badge", {
-                scale: 0,
-                autoAlpha: 0,
-                duration: 0.6,
-                delay: 0.6,
-                ease: "back.out(2)",
-                scrollTrigger: {
-                    trigger: ".intro",
-                    start: "top 70%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            const introContentTl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: ".intro-content",
-                    start: "top 75%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            introContentTl
-                .from(".intro-eyebrow", { x: 30, autoAlpha: 0, duration: 0.5 })
-                .from(".intro-title", { y: 40, autoAlpha: 0, duration: 0.7 }, "-=0.2")
-                .from(".intro-text", { y: 30, autoAlpha: 0, duration: 0.6 }, "-=0.3")
-                .from(".intro-feat", {
-                    x: 40, autoAlpha: 0, duration: 0.5,
-                    stagger: 0.12
-                }, "-=0.2");
-
-            // Parallax on intro images
-            gsap.to(".intro-img-main", {
-                y: -30,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".intro",
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-
-            gsap.to(".intro-img-float", {
-                y: -50,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".intro",
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-
-            // =====================
-            // STATS — Counter animation
-            // =====================
-            const counters = document.querySelectorAll('.counter');
-            counters.forEach(counter => {
-                const target = parseInt(counter.dataset.target);
-                gsap.to(counter, {
-                    textContent: target,
-                    duration: 2,
-                    ease: "power1.out",
-                    snap: { textContent: 1 },
-                    scrollTrigger: {
-                        trigger: ".stats-bar",
-                        start: "top 80%",
-                        toggleActions: "play none none none"
-                    },
-                    onUpdate: function() {
-                        const val = Math.round(parseFloat(counter.textContent));
-                        counter.textContent = val >= 1000 ? val.toLocaleString() : val;
-                    }
-                });
-            });
-
-            gsap.from(".stat", {
-                y: 30,
-                autoAlpha: 0,
-                duration: 0.6,
-                stagger: 0.1,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: ".stats-bar",
-                    start: "top 80%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            // =====================
-            // MENU — Staggered card reveal
-            // =====================
-            gsap.from(".menu-section .section-eyebrow", {
-                x: 30, autoAlpha: 0, duration: 0.5,
-                scrollTrigger: { trigger: ".menu-section", start: "top 80%", toggleActions: "play none none none" }
-            });
-
-            gsap.from(".menu-section .section-heading", {
-                y: 40, autoAlpha: 0, duration: 0.7,
-                scrollTrigger: { trigger: ".menu-section", start: "top 80%", toggleActions: "play none none none" }
-            });
-
-            ScrollTrigger.batch(".menu-card", {
-                onEnter: batch => gsap.from(batch, {
-                    y: 80,
-                    autoAlpha: 0,
-                    duration: 0.8,
-                    stagger: 0.1,
-                    ease: "power3.out",
-                    overwrite: true
-                }),
-                start: "top 85%"
-            });
-
-            // =====================
-            // EXPERIENCE — Dramatic reveal
-            // =====================
-            gsap.from(".exp-img", {
-                scale: 1.1,
-                autoAlpha: 0,
-                duration: 1.2,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: ".experience-section",
-                    start: "top 70%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            gsap.from(".exp-img-accent", {
-                scale: 0.9,
-                autoAlpha: 0,
-                duration: 1,
-                delay: 0.3,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: ".experience-section",
-                    start: "top 70%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            gsap.from(".exp-feat-row", {
-                x: -40,
-                autoAlpha: 0,
-                duration: 0.6,
-                stagger: 0.15,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: ".exp-features-list",
-                    start: "top 80%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            // Parallax on experience image
-            gsap.to(".exp-img", {
-                y: -40,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".experience-section",
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-
-            // =====================
-            // TESTIMONIALS — Stagger from center
-            // =====================
-            gsap.from(".test-card", {
-                y: 60,
-                autoAlpha: 0,
-                duration: 0.7,
-                stagger: { amount: 0.4, from: "center" },
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: ".testimonials-grid",
-                    start: "top 80%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            // =====================
-            // CTA — Parallax + reveal
-            // =====================
-            gsap.to(".cta-bg img", {
-                y: 60,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".cta-section",
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-
-            const ctaTl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: ".cta-section",
-                    start: "top 70%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            ctaTl
-                .from(".cta-title", { y: 50, autoAlpha: 0, duration: 0.8, ease: "power3.out" })
-                .from(".cta-text", { y: 30, autoAlpha: 0, duration: 0.6 }, "-=0.4")
-                .from(".cta-form", { y: 30, autoAlpha: 0, duration: 0.6 }, "-=0.3");
-
-            // =====================
-            // FOOTER
-            // =====================
-            gsap.from(".footer-inner > div", {
-                y: 30,
-                autoAlpha: 0,
-                duration: 0.5,
-                stagger: 0.08,
-                scrollTrigger: {
-                    trigger: ".footer",
-                    start: "top 90%",
-                    toggleActions: "play none none none"
-                }
-            });
-
-            // =====================
-            // SCROLL DOT pulse
-            // =====================
-            gsap.to(".hero-scroll-dot", {
-                scale: 1.5,
-                autoAlpha: 0.5,
-                duration: 1,
-                repeat: -1,
-                yoyo: true,
-                ease: "power1.inOut"
-            });
-
+    // ===== PRELOADER =====
+    const preloaderTl = gsap.timeline();
+    preloaderTl
+        .to('.preloader-text', { opacity: 1, duration: 0.8, ease: 'power2.out' })
+        .to('.preloader-line', { width: 120, duration: 1, ease: 'power2.inOut' }, '-=0.3')
+        .to('.preloader', {
+            yPercent: -100,
+            duration: 0.9,
+            ease: 'power3.inOut',
+            delay: 0.3,
+            onComplete: () => document.getElementById('preloader').style.display = 'none'
         });
 
-        // Reduced motion: show everything immediately
-        mm.add("(prefers-reduced-motion: reduce)", () => {
-            document.querySelectorAll('.visibility-hidden').forEach(el => {
-                el.classList.remove('visibility-hidden');
+    // ===== REDUCED MOTION AWARE =====
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+
+        // HERO TEXT REVEAL
+        gsap.to('.hero-heading .line-inner', {
+            y: 0,
+            duration: 1.2,
+            stagger: 0.12,
+            ease: 'power4.out',
+            delay: 1.8
+        });
+
+        gsap.to('.hero-label', { opacity: 1, duration: 0.8, delay: 2.6, ease: 'power2.out' });
+        gsap.from('.hero-label-line', { width: 0, duration: 0.6, delay: 2.8, ease: 'power2.inOut' });
+        gsap.to('.hero-desc', { opacity: 1, y: 0, duration: 0.8, delay: 3, ease: 'power2.out' });
+        gsap.set('.hero-desc', { y: 20 });
+        gsap.to('.hero-cta', { opacity: 1, y: 0, duration: 0.7, delay: 3.2, ease: 'power2.out' });
+        gsap.set('.hero-cta', { y: 20 });
+
+        // HERO PARALLAX
+        gsap.to('.hero-bg img', {
+            y: 120,
+            scale: 1.1,
+            ease: 'none',
+            scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+        });
+
+        gsap.to('.hero-content', {
+            opacity: 0, y: -60, ease: 'none',
+            scrollTrigger: { trigger: '.hero', start: '50% top', end: 'bottom top', scrub: true }
+        });
+
+        // SCROLL DOT
+        gsap.to('.hero-scroll-dot', {
+            y: 50, duration: 1.5, repeat: -1, yoyo: true, ease: 'power1.inOut'
+        });
+
+        // NAV SCROLL
+        ScrollTrigger.create({
+            start: 'top -80',
+            onUpdate: self => document.getElementById('nav').classList.toggle('scrolled', self.progress > 0)
+        });
+
+        // ABOUT IMAGE PARALLAX
+        gsap.to('.about-image img', {
+            y: -60, ease: 'none',
+            scrollTrigger: { trigger: '.about', start: 'top bottom', end: 'bottom top', scrub: true }
+        });
+
+        // ABOUT CONTENT REVEAL
+        const aboutTl = gsap.timeline({
+            scrollTrigger: { trigger: '.about-content', start: 'top 75%', toggleActions: 'play none none none' }
+        });
+        aboutTl
+            .from('.section-label', { x: 30, opacity: 0, duration: 0.5 })
+            .from('.about-heading', { y: 50, opacity: 0, duration: 0.8 }, '-=0.2')
+            .from('.about-text', { y: 30, opacity: 0, duration: 0.6 }, '-=0.3')
+            .from('.about-detail', { y: 40, opacity: 0, stagger: 0.1, duration: 0.5 }, '-=0.2');
+
+        // COUNTER ANIMATION
+        document.querySelectorAll('.counter').forEach(counter => {
+            const target = parseInt(counter.dataset.target);
+            gsap.to(counter, {
+                textContent: target,
+                duration: 2.5,
+                ease: 'power1.out',
+                snap: { textContent: 1 },
+                scrollTrigger: { trigger: counter, start: 'top 85%', toggleActions: 'play none none none' },
+                onUpdate() {
+                    const val = Math.round(parseFloat(counter.textContent));
+                    counter.textContent = val >= 1000 ? val.toLocaleString() : val;
+                }
             });
         });
+
+        // MENU HEADER
+        gsap.from('.menu-heading', {
+            y: 60, opacity: 0, duration: 0.9,
+            scrollTrigger: { trigger: '.menu-header', start: 'top 80%', toggleActions: 'play none none none' }
+        });
+
+        // MENU CARDS STAGGER
+        ScrollTrigger.batch('.menu-item', {
+            onEnter: batch => gsap.from(batch, {
+                y: 100, opacity: 0, duration: 1, stagger: 0.08, ease: 'power3.out', overwrite: true
+            }),
+            start: 'top 90%'
+        });
+
+        // HORIZONTAL GALLERY SCROLL
+        const track = document.getElementById('galleryTrack');
+        gsap.to(track, {
+            x: () => -(track.scrollWidth - window.innerWidth + 100),
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.hgallery',
+                start: 'top 80%',
+                end: 'bottom 20%',
+                scrub: 1
+            }
+        });
+
+        // EXPERIENCE ITEMS
+        gsap.from('.experience-heading', {
+            y: 50, opacity: 0, duration: 0.8,
+            scrollTrigger: { trigger: '.experience', start: 'top 70%', toggleActions: 'play none none none' }
+        });
+
+        gsap.from('.experience-item', {
+            y: 60, opacity: 0, stagger: 0.15, duration: 0.7,
+            scrollTrigger: { trigger: '.experience-list', start: 'top 80%', toggleActions: 'play none none none' }
+        });
+
+        // TESTIMONIALS
+        gsap.from('.testimonials-heading', {
+            y: 60, opacity: 0, duration: 0.9,
+            scrollTrigger: { trigger: '.testimonials', start: 'top 70%', toggleActions: 'play none none none' }
+        });
+
+        gsap.from('.testi-card', {
+            y: 80, opacity: 0, stagger: { amount: 0.4, from: 'center' }, duration: 0.8,
+            scrollTrigger: { trigger: '.testimonials-grid', start: 'top 80%', toggleActions: 'play none none none' }
+        });
+
+        // CTA PARALLAX
+        gsap.to('.cta-bg img', {
+            y: 80, ease: 'none',
+            scrollTrigger: { trigger: '.cta', start: 'top bottom', end: 'bottom top', scrub: true }
+        });
+
+        const ctaTl = gsap.timeline({
+            scrollTrigger: { trigger: '.cta', start: 'top 70%', toggleActions: 'play none none none' }
+        });
+        ctaTl
+            .from('.cta-heading', { y: 50, opacity: 0, duration: 0.9, ease: 'power3.out' })
+            .from('.cta-text', { y: 30, opacity: 0, duration: 0.6 }, '-=0.4')
+            .from('.cta-form', { y: 30, opacity: 0, duration: 0.6 }, '-=0.3');
+
+        // FOOTER
+        gsap.from('.footer-top > div', {
+            y: 30, opacity: 0, stagger: 0.08, duration: 0.5,
+            scrollTrigger: { trigger: '.footer', start: 'top 90%', toggleActions: 'play none none none' }
+        });
+    });
+
+    // REDUCED MOTION: show everything
+    mm.add('(prefers-reduced-motion: reduce)', () => {
+        gsap.set('.hero-heading .line-inner', { y: 0 });
+        gsap.set('.hero-label, .hero-desc, .hero-cta', { opacity: 1, y: 0 });
+    });
     </script>
 </body>
 </html>
