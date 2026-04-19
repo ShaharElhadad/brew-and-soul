@@ -3,140 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brew & Soul</title>
+    <title>Brew & Soul | קפה בוטיק</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --black: #0a0a0a;
-            --off-white: #f2efe9;
-            --cream: #e8e2d8;
-            --accent: #c4a265;
-            --accent-dim: rgba(196,162,101,0.15);
-            --text: #1a1a1a;
-            --text-light: #777;
-            --serif: 'Cormorant Garamond', serif;
-            --sans: 'Heebo', sans-serif;
+            --coffee: #2C1810;
+            --cream: #F5F0EB;
+            --gold: #C8A97E;
+            --gold-light: #E8D5B7;
+            --espresso: #1A0E08;
+            --milk: #FEFCFA;
+            --accent: #8B4513;
+            --text: #3D2B1F;
+            --text-light: #7A6558;
         }
 
         html {
             scroll-behavior: auto;
-            overflow-x: hidden;
         }
 
         body {
-            font-family: var(--sans);
-            background: var(--off-white);
+            font-family: 'Heebo', sans-serif;
+            background: var(--milk);
             color: var(--text);
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            cursor: default;
+            cursor: none;
         }
 
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-            clip: rect(0,0,0,0);
-        }
-
-        /* ===== CUSTOM CURSOR ===== */
+        /* CUSTOM CURSOR */
         .cursor {
-            position: fixed;
             width: 20px;
             height: 20px;
-            border: 1.5px solid var(--accent);
+            border: 2px solid var(--gold);
             border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
             pointer-events: none;
             z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
             mix-blend-mode: difference;
+            transition: width 0.3s, height 0.3s, border-color 0.3s;
         }
 
-        .cursor.hovering {
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .cursor.hover {
             width: 50px;
             height: 50px;
-            background: rgba(196,162,101,0.1);
+            border-color: var(--cream);
+            background: rgba(200, 169, 126, 0.1);
         }
 
-        /* ===== PRELOADER ===== */
-        .preloader {
+        /* LOADER */
+        .loader {
             position: fixed;
             inset: 0;
-            background: var(--black);
+            background: var(--espresso);
             z-index: 10000;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 24px;
+            gap: 20px;
         }
 
-        .preloader-text {
-            font-family: var(--serif);
-            font-size: clamp(36px, 8vw, 72px);
-            color: var(--off-white);
-            font-weight: 300;
-            font-style: italic;
-            opacity: 0;
+        .loader-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(36px, 6vw, 72px);
+            color: var(--cream);
+            overflow: hidden;
         }
 
-        .preloader-line {
+        .loader-text span {
+            display: inline-block;
+        }
+
+        .loader-line {
             width: 0;
             height: 1px;
-            background: var(--accent);
+            background: var(--gold);
         }
 
-        /* ===== NAV ===== */
+        /* NAV */
         .nav {
             position: fixed;
             top: 0;
             right: 0;
             left: 0;
             z-index: 100;
-            padding: 28px 40px;
+            padding: 24px 48px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: padding 0.4s, background 0.4s;
+            mix-blend-mode: difference;
         }
 
-        .nav.scrolled {
-            padding: 16px 40px;
-            background: rgba(10,10,10,0.92);
-            backdrop-filter: blur(16px);
+        .nav.solid {
+            mix-blend-mode: normal;
+            background: rgba(254, 252, 250, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 16px 48px;
+            box-shadow: 0 1px 20px rgba(0,0,0,0.06);
         }
 
         .nav-logo {
-            font-family: var(--serif);
+            font-family: 'Playfair Display', serif;
             font-size: 24px;
-            font-weight: 600;
-            color: var(--off-white);
+            font-weight: 700;
+            color: var(--cream);
             text-decoration: none;
-            letter-spacing: 1px;
+            letter-spacing: -0.5px;
         }
+
+        .nav.solid .nav-logo { color: var(--coffee); }
 
         .nav-links {
             display: flex;
-            gap: 40px;
+            gap: 36px;
             list-style: none;
-            align-items: center;
         }
 
         .nav-links a {
-            color: rgba(242,239,233,0.5);
+            color: var(--cream);
             text-decoration: none;
-            font-size: 13px;
-            font-weight: 300;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: color 0.3s;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
             position: relative;
         }
+
+        .nav.solid .nav-links a { color: var(--text); }
 
         .nav-links a::after {
             content: '';
@@ -145,841 +154,769 @@
             right: 0;
             width: 0;
             height: 1px;
-            background: var(--accent);
-            transition: width 0.3s;
+            background: currentColor;
+            transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .nav-links a:hover { color: var(--off-white); }
         .nav-links a:hover::after { width: 100%; }
 
-        .nav-reserve {
-            padding: 10px 28px;
-            border: 1px solid rgba(196,162,101,0.4);
-            color: var(--accent) !important;
-            font-weight: 400 !important;
-            transition: background 0.3s, color 0.3s !important;
+        .nav-cta {
+            padding: 10px 24px;
+            border: 1px solid var(--cream);
+            border-radius: 0;
+            font-weight: 500;
+            transition: background 0.3s, color 0.3s;
         }
 
-        .nav-reserve::after { display: none !important; }
-        .nav-reserve:hover {
-            background: var(--accent) !important;
-            color: var(--black) !important;
+        .nav.solid .nav-cta { border-color: var(--coffee); }
+
+        .nav-cta:hover {
+            background: var(--cream);
+            color: var(--coffee) !important;
         }
 
-        .nav-burger {
+        .nav.solid .nav-cta:hover {
+            background: var(--coffee);
+            color: var(--cream) !important;
+        }
+
+        .nav-cta::after { display: none !important; }
+
+        /* MOBILE NAV TOGGLE */
+        .nav-toggle {
             display: none;
             flex-direction: column;
-            gap: 6px;
-            background: none;
-            border: none;
+            gap: 5px;
             cursor: pointer;
-            padding: 4px;
+            z-index: 101;
         }
 
-        .nav-burger span {
-            display: block;
-            height: 1px;
-            background: var(--off-white);
+        .nav-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--cream);
             transition: transform 0.3s, opacity 0.3s;
         }
 
-        .nav-burger span:nth-child(1) { width: 28px; }
-        .nav-burger span:nth-child(2) { width: 20px; }
+        .nav.solid .nav-toggle span { background: var(--coffee); }
 
-        /* ===== HERO ===== */
+        /* HERO - SPLIT LAYOUT */
         .hero {
-            height: 100svh;
-            min-height: 600px;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             position: relative;
-            display: flex;
             overflow: hidden;
-            background: var(--black);
+            background: var(--espresso);
         }
 
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-        }
-
-        .hero-bg img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.55;
-            will-change: transform;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
+        .hero-left {
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            padding: 0 clamp(24px, 5vw, 80px) clamp(48px, 8vh, 100px);
-            width: 100%;
+            justify-content: center;
+            padding: 120px 60px 80px 80px;
+            position: relative;
+            z-index: 2;
         }
 
-        .hero-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 20px;
-            opacity: 0;
-        }
-
-        .hero-label-line {
-            width: 48px;
-            height: 1px;
-            background: var(--accent);
-        }
-
-        .hero-label span {
+        .hero-tag {
             font-size: 11px;
             letter-spacing: 4px;
             text-transform: uppercase;
-            color: var(--accent);
-            font-weight: 400;
-        }
-
-        .hero-heading {
-            font-family: var(--serif);
-            font-size: clamp(48px, 10vw, 140px);
-            color: var(--off-white);
-            font-weight: 300;
-            line-height: 0.95;
+            color: var(--gold);
             margin-bottom: 32px;
-            overflow: hidden;
-        }
-
-        .hero-heading .line {
-            display: block;
-            overflow: hidden;
-        }
-
-        .hero-heading .line-inner {
-            display: block;
-            transform: translateY(105%);
-        }
-
-        .hero-heading em {
-            font-style: italic;
-            color: var(--accent);
-        }
-
-        .hero-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 40px;
-        }
-
-        .hero-desc {
-            font-size: clamp(14px, 1.5vw, 17px);
-            color: rgba(242,239,233,0.5);
-            font-weight: 300;
-            line-height: 1.8;
-            max-width: 380px;
-            opacity: 0;
-        }
-
-        .hero-cta {
             display: flex;
             align-items: center;
             gap: 16px;
-            opacity: 0;
-            flex-shrink: 0;
         }
 
-        .hero-cta a {
+        .hero-tag::before {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(42px, 5.5vw, 80px);
+            color: var(--cream);
+            line-height: 1.08;
+            margin-bottom: 28px;
+            font-weight: 400;
+        }
+
+        .hero-title strong {
+            font-weight: 900;
+            font-style: italic;
+        }
+
+        .hero-title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero-title .line-inner {
+            display: block;
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            color: rgba(245, 240, 235, 0.6);
+            line-height: 1.8;
+            max-width: 420px;
+            margin-bottom: 48px;
+            font-weight: 300;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .btn-main {
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            padding: 18px 36px;
-            background: var(--accent);
-            color: var(--black);
-            font-size: 13px;
+            padding: 18px 40px;
+            background: var(--gold);
+            color: var(--espresso);
+            border: none;
+            font-size: 14px;
             font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-family: 'Heebo', sans-serif;
+            cursor: pointer;
             text-decoration: none;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .hero-cta a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(196,162,101,0.3);
-        }
-
-        .hero-cta a svg {
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
             transition: transform 0.3s;
         }
 
-        .hero-cta a:hover svg {
-            transform: translateX(-4px);
+        .btn-main:hover { transform: translateY(-2px); }
+
+        .btn-main .btn-arrow {
+            transition: transform 0.3s;
         }
 
-        .hero-scroll {
-            position: absolute;
-            bottom: 28px;
-            left: clamp(24px, 5vw, 80px);
-            z-index: 2;
+        .btn-main:hover .btn-arrow { transform: translateX(-4px); }
+
+        .btn-ghost {
+            color: var(--gold-light);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: rgba(242,239,233,0.3);
-            font-size: 10px;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .btn-ghost:hover { color: var(--gold); }
+
+        .hero-right {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.85) contrast(1.05);
+        }
+
+        .hero-img-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, var(--espresso) 0%, transparent 30%);
+            z-index: 1;
+        }
+
+        .hero-scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            right: 48px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scroll-text {
+            font-size: 11px;
             letter-spacing: 3px;
-            text-transform: uppercase;
+            color: var(--gold-light);
             writing-mode: vertical-rl;
         }
 
-        .hero-scroll-line {
+        .scroll-bar {
             width: 1px;
             height: 60px;
-            background: linear-gradient(to bottom, var(--accent), transparent);
+            background: rgba(200, 169, 126, 0.3);
             position: relative;
+            overflow: hidden;
         }
 
-        .hero-scroll-dot {
+        .scroll-bar-inner {
             position: absolute;
-            top: 0;
-            left: -2px;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--accent);
+            top: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gold);
         }
 
-        /* ===== TICKER ===== */
-        .ticker {
-            background: var(--black);
-            border-top: 1px solid rgba(242,239,233,0.06);
-            border-bottom: 1px solid rgba(242,239,233,0.06);
-            padding: 20px 0;
+        /* MARQUEE */
+        .marquee-section {
+            padding: 28px 0;
+            background: var(--coffee);
             overflow: hidden;
             white-space: nowrap;
         }
 
-        .ticker-track {
-            display: inline-flex;
-            animation: ticker 35s linear infinite;
+        .marquee-track {
+            display: flex;
+            gap: 60px;
+            animation: marquee 30s linear infinite;
         }
 
-        .ticker-item {
-            font-family: var(--serif);
-            font-size: 16px;
-            font-weight: 300;
-            font-style: italic;
-            color: rgba(242,239,233,0.25);
-            padding: 0 48px;
-            position: relative;
+        .marquee-item {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--gold-light);
+            opacity: 0.6;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
-        .ticker-item::before {
-            content: '';
-            position: absolute;
-            right: -4px;
-            top: 50%;
+        .marquee-dot {
             width: 6px;
             height: 6px;
+            background: var(--gold);
             border-radius: 50%;
-            border: 1px solid rgba(196,162,101,0.3);
-            transform: translateY(-50%);
+            opacity: 0.4;
         }
 
-        @keyframes ticker {
+        @keyframes marquee {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
 
-        /* ===== ABOUT SPLIT ===== */
+        /* ABOUT - ASYMMETRIC */
         .about {
+            padding: 160px 80px;
+            max-width: 1400px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 100vh;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 120px;
+            align-items: center;
         }
 
-        .about-image {
+        .about-visual {
             position: relative;
-            overflow: hidden;
         }
 
-        .about-image img {
+        .about-img-main {
             width: 100%;
-            height: 100%;
+            height: 550px;
             object-fit: cover;
-            will-change: transform;
+            display: block;
         }
 
-        .about-image-overlay {
+        .about-img-float {
             position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(10,10,10,0.3), transparent 60%);
+            bottom: -40px;
+            left: -40px;
+            width: 240px;
+            height: 300px;
+            object-fit: cover;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .about-year {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 120px;
+            font-weight: 900;
+            color: var(--cream);
+            opacity: 0.07;
+            line-height: 1;
+            user-select: none;
         }
 
         .about-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: clamp(40px, 8vw, 120px);
-            background: var(--off-white);
-            position: relative;
+            padding-right: 0;
         }
 
-        .about-content::before {
-            content: '';
-            position: absolute;
-            top: 80px;
-            right: 80px;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: var(--accent-dim);
-            filter: blur(60px);
-            pointer-events: none;
-        }
-
-        .section-label {
+        .section-tag {
+            display: inline-block;
             font-size: 11px;
             letter-spacing: 4px;
             text-transform: uppercase;
-            color: var(--accent);
-            font-weight: 400;
+            color: var(--gold);
             margin-bottom: 24px;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 16px;
         }
 
-        .section-label-line {
-            width: 40px;
+        .section-tag::before {
+            content: '';
+            width: 30px;
             height: 1px;
-            background: var(--accent);
+            background: var(--gold);
         }
 
-        .about-heading {
-            font-family: var(--serif);
-            font-size: clamp(36px, 5vw, 64px);
-            font-weight: 300;
+        .about-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 3.5vw, 48px);
+            color: var(--coffee);
+            margin-bottom: 24px;
             line-height: 1.15;
-            margin-bottom: 32px;
-            color: var(--black);
+            font-weight: 400;
         }
 
-        .about-heading em {
-            font-style: italic;
-            color: var(--accent);
+        .about-title strong {
+            font-weight: 900;
         }
 
         .about-text {
             font-size: 16px;
             color: var(--text-light);
             line-height: 1.9;
-            font-weight: 300;
-            margin-bottom: 48px;
-            max-width: 420px;
+            margin-bottom: 40px;
         }
 
-        .about-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 32px;
+        .about-stats {
+            display: flex;
+            gap: 48px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(200, 169, 126, 0.2);
         }
 
-        .about-detail {
-            padding-top: 20px;
-            border-top: 1px solid rgba(0,0,0,0.08);
-        }
-
-        .about-detail-num {
-            font-family: var(--serif);
+        .about-stat-num {
+            font-family: 'Playfair Display', serif;
             font-size: 42px;
-            font-weight: 300;
-            color: var(--black);
+            font-weight: 700;
+            color: var(--coffee);
             line-height: 1;
-            margin-bottom: 6px;
         }
 
-        .about-detail-label {
-            font-size: 12px;
+        .about-stat-label {
+            font-size: 13px;
             color: var(--text-light);
-            letter-spacing: 1px;
+            margin-top: 6px;
         }
 
-        /* ===== MENU ===== */
-        .menu {
-            padding: clamp(80px, 12vh, 200px) clamp(24px, 5vw, 80px);
-            background: var(--black);
-            position: relative;
+        /* HORIZONTAL SCROLL MENU */
+        .menu-section {
+            padding: 140px 0;
+            overflow: hidden;
         }
 
         .menu-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 80px;
-            gap: 40px;
+            text-align: center;
+            padding: 0 60px;
+            margin-bottom: 70px;
         }
 
-        .menu-heading {
-            font-family: var(--serif);
-            font-size: clamp(36px, 6vw, 80px);
+        .menu-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 4vw, 56px);
+            color: var(--coffee);
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        .menu-subtitle {
+            font-size: 16px;
+            color: var(--text-light);
             font-weight: 300;
-            color: var(--off-white);
-            line-height: 1.05;
         }
 
-        .menu-heading em {
-            font-style: italic;
-            color: var(--accent);
-        }
-
-        .menu-sub {
-            font-size: 14px;
-            color: rgba(242,239,233,0.35);
-            font-weight: 300;
-            max-width: 300px;
-            line-height: 1.7;
-            text-align: left;
-            flex-shrink: 0;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
-        }
-
-        .menu-item {
+        .menu-scroll-wrapper {
             position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            aspect-ratio: 3/4;
+            padding: 0 80px;
         }
 
-        .menu-item img {
+        .menu-track {
+            display: flex;
+            gap: 32px;
+            padding-bottom: 20px;
+        }
+
+        .menu-card {
+            flex-shrink: 0;
+            width: 340px;
+            background: white;
+            overflow: hidden;
+            box-shadow: 0 4px 40px rgba(44, 24, 16, 0.06);
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .menu-card-img {
+            height: 260px;
+            overflow: hidden;
+        }
+
+        .menu-card-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .menu-item:hover img {
+        .menu-card:hover .menu-card-img img {
             transform: scale(1.08);
         }
 
-        .menu-item-overlay {
+        .menu-card-body {
+            padding: 28px;
+        }
+
+        .menu-card-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--coffee);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .menu-card-desc {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .menu-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .menu-card-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--coffee);
+        }
+
+        .menu-card-price span {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .menu-card-badge {
+            padding: 4px 14px;
+            background: var(--gold);
+            color: var(--espresso);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* EXPERIENCE - FULL WIDTH IMAGE + TEXT */
+        .experience {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .experience-bg {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top,
-                rgba(10,10,10,0.9) 0%,
-                rgba(10,10,10,0.3) 40%,
-                rgba(10,10,10,0.05) 100%
-            );
-            transition: background 0.4s;
         }
 
-        .menu-item:hover .menu-item-overlay {
-            background: linear-gradient(to top,
-                rgba(10,10,10,0.95) 0%,
-                rgba(10,10,10,0.5) 50%,
-                rgba(10,10,10,0.2) 100%
-            );
-        }
-
-        .menu-item-content {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            padding: clamp(20px, 3vw, 36px);
-        }
-
-        .menu-item-tag {
-            display: inline-block;
-            font-size: 9px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--accent);
-            border: 1px solid rgba(196,162,101,0.3);
-            padding: 4px 12px;
-            margin-bottom: 12px;
-        }
-
-        .menu-item-name {
-            font-family: var(--serif);
-            font-size: clamp(20px, 2.5vw, 28px);
-            color: var(--off-white);
-            font-weight: 300;
-            margin-bottom: 8px;
-        }
-
-        .menu-item-desc {
-            font-size: 13px;
-            color: rgba(242,239,233,0.4);
-            font-weight: 300;
-            line-height: 1.6;
-            margin-bottom: 16px;
-            max-width: 260px;
-        }
-
-        .menu-item-price {
-            font-family: var(--serif);
-            font-size: 24px;
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .menu-item-price span {
-            font-size: 14px;
-            font-weight: 300;
-        }
-
-        .menu-item-line {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .menu-item:hover .menu-item-line {
-            width: 100%;
-        }
-
-        /* ===== HORIZONTAL GALLERY ===== */
-        .hgallery {
-            padding: clamp(60px, 8vh, 120px) 0;
-            background: var(--off-white);
-            overflow: hidden;
-        }
-
-        .hgallery-track {
-            display: flex;
-            gap: clamp(12px, 2vw, 24px);
-            will-change: transform;
-        }
-
-        .hgallery-item {
-            flex-shrink: 0;
-            width: clamp(250px, 30vw, 400px);
-            aspect-ratio: 3/4;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .hgallery-item img {
+        .experience-bg img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s;
         }
 
-        .hgallery-item:hover img {
-            transform: scale(1.04);
-        }
-
-        /* ===== EXPERIENCE ===== */
-        .experience {
-            padding: clamp(80px, 12vh, 200px) clamp(24px, 5vw, 80px);
-            background: var(--cream);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .experience::before {
-            content: '"';
+        .experience-overlay {
             position: absolute;
-            top: -60px;
-            right: 40px;
-            font-family: var(--serif);
-            font-size: 400px;
-            color: rgba(196,162,101,0.06);
-            pointer-events: none;
-            line-height: 1;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(26, 14, 8, 0.92) 0%, rgba(44, 24, 16, 0.75) 100%);
         }
 
-        .experience-inner {
-            max-width: 900px;
+        .experience-content {
+            position: relative;
+            z-index: 2;
+            padding: 120px 80px;
+            max-width: 1400px;
             margin: 0 auto;
-            text-align: center;
+            width: 100%;
         }
 
-        .experience-heading {
-            font-family: var(--serif);
-            font-size: clamp(32px, 5vw, 56px);
-            font-weight: 300;
-            line-height: 1.3;
-            color: var(--black);
-            margin-bottom: 48px;
-        }
-
-        .experience-heading em {
-            font-style: italic;
-            color: var(--accent);
-        }
-
-        .experience-list {
+        .exp-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 48px;
-            text-align: center;
+            margin-top: 60px;
         }
 
-        .experience-item {
+        .exp-item {
+            padding: 40px;
+            border: 1px solid rgba(200, 169, 126, 0.15);
             position: relative;
-            padding-top: 24px;
+            transition: border-color 0.4s;
         }
 
-        .experience-item::before {
-            content: '';
+        .exp-item:hover {
+            border-color: var(--gold);
+        }
+
+        .exp-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 56px;
+            font-weight: 900;
+            color: var(--gold);
+            opacity: 0.15;
             position: absolute;
-            top: 0;
-            right: 50%;
-            transform: translateX(50%);
-            width: 32px;
-            height: 1px;
-            background: var(--accent);
-        }
-
-        .experience-item h4 {
-            font-family: var(--serif);
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--black);
-            margin-bottom: 12px;
-        }
-
-        .experience-item p {
-            font-size: 14px;
-            color: var(--text-light);
-            line-height: 1.8;
-            font-weight: 300;
-        }
-
-        /* ===== TESTIMONIALS ===== */
-        .testimonials {
-            padding: clamp(80px, 12vh, 200px) clamp(24px, 5vw, 80px);
-            background: var(--off-white);
-        }
-
-        .testimonials-heading {
-            font-family: var(--serif);
-            font-size: clamp(36px, 6vw, 72px);
-            font-weight: 300;
-            color: var(--black);
-            text-align: center;
-            margin-bottom: 80px;
-        }
-
-        .testimonials-heading em {
-            font-style: italic;
-            color: var(--accent);
-        }
-
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .testi-card {
-            background: white;
-            padding: clamp(28px, 3vw, 48px);
-            position: relative;
-            border: 1px solid rgba(0,0,0,0.04);
-            transition: transform 0.4s, box-shadow 0.4s;
-        }
-
-        .testi-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 24px 64px rgba(0,0,0,0.06);
-        }
-
-        .testi-card::before {
-            content: '"';
-            font-family: var(--serif);
-            font-size: 80px;
-            color: var(--accent-dim);
-            position: absolute;
-            top: 12px;
-            right: 20px;
+            top: 16px;
+            left: 20px;
             line-height: 1;
         }
 
-        .testi-stars {
-            display: flex;
-            gap: 3px;
-            margin-bottom: 20px;
-        }
-
-        .testi-star {
-            width: 12px;
-            height: 12px;
-            fill: var(--accent);
-        }
-
-        .testi-quote {
-            font-size: 15px;
-            color: var(--text);
-            line-height: 1.8;
-            font-weight: 300;
-            margin-bottom: 28px;
-        }
-
-        .testi-line {
-            width: 32px;
-            height: 1px;
-            background: var(--accent);
-            margin-bottom: 20px;
-        }
-
-        .testi-name {
+        .exp-item-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--cream);
+            margin-bottom: 12px;
             font-weight: 700;
+        }
+
+        .exp-item-text {
             font-size: 14px;
-            color: var(--black);
+            color: rgba(245, 240, 235, 0.6);
+            line-height: 1.8;
         }
 
-        .testi-role {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-top: 4px;
+        /* TESTIMONIALS - LARGE QUOTE STYLE */
+        .testimonials {
+            padding: 160px 80px;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
         }
 
-        /* ===== CTA ===== */
-        .cta {
+        .testimonial-large-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 200px;
+            color: var(--gold);
+            opacity: 0.08;
+            line-height: 0.5;
+            margin-bottom: -30px;
+        }
+
+        .testimonial-slides {
             position: relative;
-            min-height: 70vh;
+            overflow: hidden;
+        }
+
+        .testimonial-slide {
+            display: none;
+        }
+
+        .testimonial-slide.active {
+            display: block;
+        }
+
+        .testimonial-quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(22px, 2.5vw, 32px);
+            font-style: italic;
+            color: var(--coffee);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .testimonial-author-wrap {
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            background: var(--black);
+            gap: 16px;
         }
 
-        .cta-bg {
-            position: absolute;
-            inset: 0;
-        }
-
-        .cta-bg img {
-            width: 100%;
-            height: 100%;
+        .testimonial-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
             object-fit: cover;
-            opacity: 0.3;
-            will-change: transform;
+        }
+
+        .testimonial-info {
+            text-align: right;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            color: var(--coffee);
+            font-size: 16px;
+        }
+
+        .testimonial-role {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .testimonial-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .testimonial-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold-light);
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .testimonial-dot.active {
+            background: var(--gold);
+            transform: scale(1.3);
+        }
+
+        /* CTA */
+        .cta {
+            padding: 160px 80px;
+            background: var(--espresso);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-bg-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(100px, 15vw, 250px);
+            font-weight: 900;
+            color: rgba(200, 169, 126, 0.03);
+            white-space: nowrap;
+            user-select: none;
         }
 
         .cta-content {
             position: relative;
             z-index: 2;
-            text-align: center;
-            padding: 0 24px;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .cta-heading {
-            font-family: var(--serif);
-            font-size: clamp(36px, 7vw, 80px);
-            font-weight: 300;
-            color: var(--off-white);
-            line-height: 1.1;
-            margin-bottom: 24px;
-        }
-
-        .cta-heading em {
-            font-style: italic;
-            color: var(--accent);
+        .cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(36px, 4.5vw, 56px);
+            color: var(--cream);
+            margin-bottom: 20px;
+            line-height: 1.15;
+            font-weight: 400;
         }
 
         .cta-text {
-            font-size: 15px;
-            color: rgba(242,239,233,0.4);
+            font-size: 16px;
+            color: rgba(245, 240, 235, 0.5);
+            margin-bottom: 48px;
             font-weight: 300;
-            max-width: 420px;
-            margin: 0 auto 40px;
-            line-height: 1.8;
+            line-height: 1.7;
         }
 
         .cta-form {
             display: flex;
-            max-width: 420px;
+            gap: 0;
+            max-width: 460px;
             margin: 0 auto;
-            border: 1px solid rgba(242,239,233,0.12);
-            overflow: hidden;
+            border: 1px solid rgba(200, 169, 126, 0.3);
         }
 
         .cta-input {
             flex: 1;
             padding: 18px 24px;
-            background: rgba(242,239,233,0.04);
+            background: transparent;
             border: none;
-            color: var(--off-white);
-            font-size: 14px;
-            font-family: var(--sans);
+            color: var(--cream);
+            font-size: 15px;
+            font-family: 'Heebo', sans-serif;
             outline: none;
-            font-weight: 300;
         }
 
-        .cta-input::placeholder { color: rgba(242,239,233,0.2); }
+        .cta-input::placeholder { color: rgba(200, 169, 126, 0.4); }
 
-        .cta-btn {
-            padding: 18px 32px;
-            background: var(--accent);
-            color: var(--black);
+        .cta-submit {
+            padding: 18px 36px;
+            background: var(--gold);
+            color: var(--espresso);
             border: none;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
-            font-family: var(--sans);
+            font-family: 'Heebo', sans-serif;
             cursor: pointer;
-            letter-spacing: 1px;
-            text-transform: uppercase;
             transition: background 0.3s;
             white-space: nowrap;
         }
 
-        .cta-btn:hover { background: #d4b275; }
+        .cta-submit:hover { background: var(--gold-light); }
 
-        /* ===== FOOTER ===== */
+        /* FOOTER */
         .footer {
-            background: var(--black);
-            border-top: 1px solid rgba(242,239,233,0.06);
-            padding: 80px clamp(24px, 5vw, 80px) 40px;
+            background: var(--coffee);
+            padding: 60px 80px;
         }
 
-        .footer-top {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 60px;
+        .footer-inner {
             max-width: 1200px;
-            margin: 0 auto 60px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 60px;
         }
 
-        .footer-logo {
-            font-family: var(--serif);
-            font-size: 28px;
-            font-weight: 600;
-            color: var(--off-white);
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--cream);
             margin-bottom: 16px;
         }
 
-        .footer-tagline {
+        .footer-desc {
             font-size: 14px;
-            color: rgba(242,239,233,0.3);
+            color: rgba(200, 169, 126, 0.6);
             line-height: 1.7;
-            font-weight: 300;
             max-width: 280px;
         }
 
-        .footer-col-title {
-            font-size: 10px;
-            letter-spacing: 3px;
+        .footer-heading {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 2px;
             text-transform: uppercase;
-            color: var(--accent);
-            font-weight: 400;
             margin-bottom: 20px;
         }
 
@@ -987,365 +924,343 @@
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
 
         .footer-links a {
-            color: rgba(242,239,233,0.3);
+            color: rgba(245, 240, 235, 0.5);
             text-decoration: none;
-            font-size: 13px;
-            font-weight: 300;
+            font-size: 14px;
             transition: color 0.3s;
         }
 
-        .footer-links a:hover { color: var(--accent); }
+        .footer-links a:hover { color: var(--cream); }
 
         .footer-bottom {
             max-width: 1200px;
-            margin: 0 auto;
-            padding-top: 24px;
-            border-top: 1px solid rgba(242,239,233,0.06);
+            margin: 40px auto 0;
+            padding-top: 30px;
+            border-top: 1px solid rgba(200, 169, 126, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .footer-copy {
-            font-size: 11px;
-            color: rgba(242,239,233,0.15);
-            letter-spacing: 1px;
+            font-size: 12px;
+            color: rgba(200, 169, 126, 0.4);
         }
 
         .footer-socials {
             display: flex;
-            gap: 24px;
+            gap: 16px;
         }
 
-        .footer-socials a {
-            color: rgba(242,239,233,0.2);
-            transition: color 0.3s;
-        }
-
-        .footer-socials a:hover { color: var(--accent); }
-
-        /* ===== MOBILE MENU ===== */
-        .mobile-menu {
-            position: fixed;
-            inset: 0;
-            background: var(--black);
-            z-index: 99;
+        .footer-social {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(200, 169, 126, 0.15);
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 32px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s;
+            transition: border-color 0.3s, background 0.3s;
+            cursor: pointer;
         }
 
-        .mobile-menu.open {
-            opacity: 1;
-            pointer-events: all;
+        .footer-social:hover {
+            border-color: var(--gold);
+            background: rgba(200, 169, 126, 0.1);
         }
 
-        .mobile-menu a {
-            font-family: var(--serif);
-            font-size: 32px;
-            color: var(--off-white);
-            text-decoration: none;
-            font-weight: 300;
-            transition: color 0.3s;
-        }
-
-        .mobile-menu a:hover { color: var(--accent); }
-
-        /* ===== RESPONSIVE ===== */
+        /* RESPONSIVE */
         @media (max-width: 1024px) {
-            .about { grid-template-columns: 1fr; }
-            .about-image { min-height: 50vh; }
-            .menu-grid { grid-template-columns: repeat(2, 1fr); }
-            .experience-list { grid-template-columns: 1fr; gap: 40px; }
-            .testimonials-grid { grid-template-columns: 1fr; max-width: 480px; }
-            .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+            .hero { grid-template-columns: 1fr; min-height: 100vh; }
+            .hero-left { padding: 140px 40px 80px; }
+            .hero-right { position: absolute; inset: 0; }
+            .hero-img-overlay { background: linear-gradient(to left, rgba(26,14,8,0.3) 0%, rgba(26,14,8,0.85) 60%, rgba(26,14,8,0.95) 100%); }
+            .about { grid-template-columns: 1fr; gap: 60px; padding: 100px 40px; }
+            .about-img-float { display: none; }
+            .exp-grid { grid-template-columns: 1fr 1fr; }
+            .footer-inner { grid-template-columns: repeat(2, 1fr); }
+            .cursor, .cursor-dot { display: none; }
+            body { cursor: auto; }
         }
 
         @media (max-width: 768px) {
-            .cursor { display: none; }
-            .nav { padding: 16px 20px; }
-            .nav.scrolled { padding: 12px 20px; }
+            .nav { padding: 16px 24px; }
+            .nav.solid { padding: 14px 24px; }
             .nav-links { display: none; }
-            .nav-burger { display: flex; }
+            .nav-toggle { display: flex; }
+            .hero-left { padding: 120px 24px 60px; }
+            .hero-desc { font-size: 15px; }
+            .hero-actions { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .hero-scroll-indicator { display: none; }
+            .about { padding: 80px 24px; gap: 40px; }
+            .about-img-main { height: 350px; }
+            .about-year { font-size: 80px; }
+            .about-stats { gap: 28px; }
+            .about-stat-num { font-size: 32px; }
+            .menu-section { padding: 80px 0; }
+            .menu-header { padding: 0 24px; }
+            .menu-scroll-wrapper { padding: 0 24px; }
+            .menu-card { width: 280px; }
+            .experience-content { padding: 80px 24px; }
+            .exp-grid { grid-template-columns: 1fr; gap: 24px; }
+            .testimonials { padding: 80px 24px; }
+            .testimonial-large-quote { font-size: 100px; }
+            .cta { padding: 80px 24px; }
+            .cta-form { flex-direction: column; border: none; }
+            .cta-input { border: 1px solid rgba(200, 169, 126, 0.3); }
+            .footer { padding: 40px 24px; }
+            .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+            .marquee-section { padding: 20px 0; }
+        }
 
-            .hero-content { padding: 0 20px 40px; }
-            .hero-bottom { flex-direction: column; align-items: flex-start; gap: 24px; }
-            .hero-scroll { display: none; }
+        /* REVEAL HELPERS */
+        .reveal {
+            clip-path: inset(0 0 100% 0);
+        }
 
-            .about-content { padding: 48px 24px; }
-            .about-details { gap: 20px; }
-
-            .menu { padding: 60px 16px; }
-            .menu-header { flex-direction: column; align-items: flex-start; margin-bottom: 48px; }
-            .menu-grid { grid-template-columns: 1fr; gap: 16px; }
-            .menu-item { aspect-ratio: 4/3; }
-
-            .hgallery { padding: 40px 0; }
-            .hgallery-item { width: 220px; }
-
-            .experience { padding: 60px 24px; }
-
-            .testimonials { padding: 60px 20px; }
-            .testimonials-heading { margin-bottom: 48px; }
-
-            .cta { min-height: 60vh; }
-            .cta-form { flex-direction: column; border: none; gap: 8px; }
-            .cta-input { border: 1px solid rgba(242,239,233,0.12); }
-
-            .footer-top { grid-template-columns: 1fr; gap: 28px; }
-            .footer-bottom { flex-direction: column; gap: 16px; }
+        .img-reveal {
+            clip-path: inset(100% 0 0 0);
         }
     </style>
 </head>
 <body>
 
-    <!-- CURSOR -->
+    <!-- CUSTOM CURSOR -->
     <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
 
-    <!-- PRELOADER -->
-    <div class="preloader" id="preloader">
-        <div class="preloader-text">Brew & Soul</div>
-        <div class="preloader-line"></div>
-    </div>
-
-    <!-- MOBILE MENU -->
-    <div class="mobile-menu" id="mobileMenu">
-        <a href="#about" onclick="closeMobile()">הסיפור</a>
-        <a href="#menu-section" onclick="closeMobile()">תפריט</a>
-        <a href="#experience" onclick="closeMobile()">חוויה</a>
-        <a href="#testimonials" onclick="closeMobile()">לקוחות</a>
-        <a href="#reserve" onclick="closeMobile()">הזמנת מקום</a>
+    <!-- LOADER -->
+    <div class="loader" id="loader">
+        <div class="loader-text">
+            <span>B</span><span>r</span><span>e</span><span>w</span><span>&nbsp;</span><span>&</span><span>&nbsp;</span><span>S</span><span>o</span><span>u</span><span>l</span>
+        </div>
+        <div class="loader-line" id="loaderLine"></div>
     </div>
 
     <!-- NAV -->
     <nav class="nav" id="nav">
-        <a href="#" class="nav-logo">B&S</a>
+        <a href="#" class="nav-logo">Brew & Soul</a>
+        <div class="nav-toggle" id="navToggle" onclick="document.querySelector('.nav-links').classList.toggle('show')">
+            <span></span><span></span><span></span>
+        </div>
         <ul class="nav-links">
             <li><a href="#about">הסיפור</a></li>
-            <li><a href="#menu-section">תפריט</a></li>
+            <li><a href="#menu">תפריט</a></li>
             <li><a href="#experience">חוויה</a></li>
-            <li><a href="#testimonials">לקוחות</a></li>
-            <li><a href="#reserve" class="nav-reserve">הזמנת מקום</a></li>
+            <li><a href="#cta" class="nav-cta">הזמנת מקום</a></li>
         </ul>
-        <button class="nav-burger" id="burger" aria-label="תפריט">
-            <span></span><span></span>
-        </button>
     </nav>
 
     <!-- HERO -->
-    <section class="hero">
-        <div class="hero-bg">
-            <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=1800&q=85&auto=format" alt="Coffee">
-        </div>
-        <div class="hero-content">
-            <div class="hero-label">
-                <span class="hero-label-line"></span>
-                <span>בוטיק קפה תל אביב</span>
-            </div>
-            <h1 class="hero-heading">
+    <section class="hero" id="hero">
+        <div class="hero-left">
+            <div class="hero-tag">EST. 2019 | תל אביב</div>
+            <h1 class="hero-title">
                 <span class="line"><span class="line-inner">כל כוס</span></span>
                 <span class="line"><span class="line-inner">מספרת</span></span>
-                <span class="line"><span class="line-inner"><em>סיפור</em></span></span>
+                <span class="line"><span class="line-inner"><strong>סיפור</strong></span></span>
             </h1>
-            <div class="hero-bottom">
-                <p class="hero-desc">פולים שנבחרו ביד מחוות קפה בברזיל ואתיופיה.<br>קלייה מקומית כל שבוע. אווירה שלא תמצאו במקום אחר.</p>
-                <div class="hero-cta">
-                    <a href="#menu-section">
-                        גלו את התפריט
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                    </a>
-                </div>
+            <p class="hero-desc">
+                פולים שנבחרו בקפידה מהחוות הטובות בעולם.
+                קלייה מקומית כל שבוע. אווירה שגורמת לך לרצות להישאר.
+            </p>
+            <div class="hero-actions">
+                <a href="#menu" class="btn-main">
+                    גלו את התפריט
+                    <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                </a>
+                <a href="#about" class="btn-ghost">
+                    הסיפור שלנו
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                </a>
             </div>
         </div>
-        <div class="hero-scroll">
-            <span>גלול</span>
-            <div class="hero-scroll-line">
-                <div class="hero-scroll-dot"></div>
+        <div class="hero-right">
+            <img class="hero-img" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&h=1200&fit=crop&q=80" alt="Brew and Soul Coffee">
+            <div class="hero-img-overlay"></div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <span class="scroll-text">SCROLL</span>
+            <div class="scroll-bar">
+                <div class="scroll-bar-inner" id="scrollBarInner"></div>
             </div>
         </div>
     </section>
 
-    <!-- TICKER -->
-    <div class="ticker">
-        <div class="ticker-track">
-            <span class="ticker-item">Single Origin</span>
-            <span class="ticker-item">קלייה מקומית</span>
-            <span class="ticker-item">Pour Over</span>
-            <span class="ticker-item">אתיופיה Yirgacheffe</span>
-            <span class="ticker-item">Cold Brew 24h</span>
-            <span class="ticker-item">V60</span>
-            <span class="ticker-item">ברזיל Cerrado</span>
-            <span class="ticker-item">Specialty Coffee</span>
-            <span class="ticker-item">Single Origin</span>
-            <span class="ticker-item">קלייה מקומית</span>
-            <span class="ticker-item">Pour Over</span>
-            <span class="ticker-item">אתיופיה Yirgacheffe</span>
-            <span class="ticker-item">Cold Brew 24h</span>
-            <span class="ticker-item">V60</span>
-            <span class="ticker-item">ברזיל Cerrado</span>
-            <span class="ticker-item">Specialty Coffee</span>
+    <!-- MARQUEE -->
+    <div class="marquee-section">
+        <div class="marquee-track">
+            <span class="marquee-item">אספרסו <span class="marquee-dot"></span></span>
+            <span class="marquee-item">קלייה מקומית <span class="marquee-dot"></span></span>
+            <span class="marquee-item">Cold Brew <span class="marquee-dot"></span></span>
+            <span class="marquee-item">מאצ׳ה <span class="marquee-dot"></span></span>
+            <span class="marquee-item">לוונדר לאטה <span class="marquee-dot"></span></span>
+            <span class="marquee-item">V60 <span class="marquee-dot"></span></span>
+            <span class="marquee-item">סדנאות קפה <span class="marquee-dot"></span></span>
+            <span class="marquee-item">פולי אתיופיה <span class="marquee-dot"></span></span>
+            <span class="marquee-item">אספרסו <span class="marquee-dot"></span></span>
+            <span class="marquee-item">קלייה מקומית <span class="marquee-dot"></span></span>
+            <span class="marquee-item">Cold Brew <span class="marquee-dot"></span></span>
+            <span class="marquee-item">מאצ׳ה <span class="marquee-dot"></span></span>
+            <span class="marquee-item">לוונדר לאטה <span class="marquee-dot"></span></span>
+            <span class="marquee-item">V60 <span class="marquee-dot"></span></span>
+            <span class="marquee-item">סדנאות קפה <span class="marquee-dot"></span></span>
+            <span class="marquee-item">פולי אתיופיה <span class="marquee-dot"></span></span>
         </div>
     </div>
 
     <!-- ABOUT -->
     <section class="about" id="about">
-        <div class="about-image">
-            <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1000&q=80&auto=format" alt="Coffee roasting">
-            <div class="about-image-overlay"></div>
+        <div class="about-visual">
+            <div class="about-year">2019</div>
+            <img class="about-img-main img-reveal" src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&h=600&fit=crop&q=80" alt="Coffee Roasting">
+            <img class="about-img-float img-reveal" src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400&h=500&fit=crop&q=80" alt="Latte Art">
         </div>
         <div class="about-content">
-            <div class="section-label">
-                <span class="section-label-line"></span>
-                הסיפור שלנו
-            </div>
-            <h2 class="about-heading">
-                יותר מקפה.<br>
-                זו <em>אומנות.</em>
-            </h2>
+            <div class="section-tag">הסיפור שלנו</div>
+            <h2 class="about-title">יותר מסתם<br><strong>בית קפה</strong></h2>
             <p class="about-text">
-                התחלנו ב-2019 מתשוקה לדבר האמיתי. כל פול נבחר בעצמנו, הקלייה מתבצעת אצלנו במקום, והברמנים עוברים הכשרה של חצי שנה לפני שהם מכינים את הכוס הראשונה.
+                התחלנו ב-2019 מחלום פשוט: ליצור מקום שבו הקפה הוא לא רק משקה, אלא חוויה.
+                כל פול נבחר בעצמנו מחוות ייחודיות בברזיל, אתיופיה וקולומביה.
+                הקלייה מתבצעת כאן, והברמנים שלנו עוברים הכשרה של 6 חודשים
+                לפני שהם מגישים את הכוס הראשונה.
             </p>
-            <div class="about-details">
-                <div class="about-detail">
-                    <div class="about-detail-num counter" data-target="12500">0</div>
-                    <div class="about-detail-label">כוסות בחודש</div>
+            <div class="about-stats">
+                <div>
+                    <div class="about-stat-num"><span class="counter" data-target="12500">0</span>+</div>
+                    <div class="about-stat-label">כוסות בחודש</div>
                 </div>
-                <div class="about-detail">
-                    <div class="about-detail-num counter" data-target="98">0</div>
-                    <div class="about-detail-label">% שביעות רצון</div>
+                <div>
+                    <div class="about-stat-num"><span class="counter" data-target="15">0</span></div>
+                    <div class="about-stat-label">סוגי פולים</div>
                 </div>
-                <div class="about-detail">
-                    <div class="about-detail-num counter" data-target="15">0</div>
-                    <div class="about-detail-label">סוגי פולים</div>
-                </div>
-                <div class="about-detail">
-                    <div class="about-detail-num counter" data-target="7">0</div>
-                    <div class="about-detail-label">שנות ניסיון</div>
+                <div>
+                    <div class="about-stat-num"><span class="counter" data-target="7">0</span></div>
+                    <div class="about-stat-label">שנות ניסיון</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- MENU -->
-    <section class="menu" id="menu-section">
+    <section class="menu-section" id="menu">
         <div class="menu-header">
-            <h2 class="menu-heading">
-                הנבחרים<br>
-                <em>שלנו</em>
-            </h2>
-            <p class="menu-sub">כל משקה מוכן ברגע, בשיטה, ובאהבה.<br>פולים שנבחרו בקפידה, חליטה מדויקת.</p>
+            <div class="section-tag" style="justify-content: center;">התפריט שלנו</div>
+            <h2 class="menu-title">נבחרת <em>הכוכבים</em></h2>
+            <p class="menu-subtitle">המשקאות שמחזירים אתכם אלינו כל בוקר</p>
         </div>
-        <div class="menu-grid">
-            <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=600&q=80&auto=format" alt="Espresso">
-                <div class="menu-item-overlay"></div>
-                <div class="menu-item-content">
-                    <div class="menu-item-tag">הכי נמכר</div>
-                    <h3 class="menu-item-name">אספרסו קלאסי</h3>
-                    <p class="menu-item-desc">שוט כפול, קרמה מושלמת, פולי ברזיל Cerrado</p>
-                    <div class="menu-item-price">12 <span>ש"ח</span></div>
+        <div class="menu-scroll-wrapper">
+            <div class="menu-track" id="menuTrack">
+                <div class="menu-card">
+                    <div class="menu-card-img">
+                        <img src="https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=500&h=400&fit=crop&q=80" alt="Espresso">
+                    </div>
+                    <div class="menu-card-body">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+                            <h3 class="menu-card-name">אספרסו קלאסי</h3>
+                            <span class="menu-card-badge">הכי נמכר</span>
+                        </div>
+                        <p class="menu-card-desc">שוט כפול עם קרמה מושלמת. פולי ברזיל בקלייה בינונית.</p>
+                        <div class="menu-card-footer">
+                            <div class="menu-card-price">12<span> ש"ח</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="menu-item-line"></div>
-            </div>
-            <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80&auto=format" alt="Matcha">
-                <div class="menu-item-overlay"></div>
-                <div class="menu-item-content">
-                    <h3 class="menu-item-name">מאצ׳ה לאטה</h3>
-                    <p class="menu-item-desc">מאצ׳ה יפנית אותנטית, חלב שיבולת שועל</p>
-                    <div class="menu-item-price">22 <span>ש"ח</span></div>
+                <div class="menu-card">
+                    <div class="menu-card-img">
+                        <img src="https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=500&h=400&fit=crop&q=80" alt="Matcha Latte">
+                    </div>
+                    <div class="menu-card-body">
+                        <h3 class="menu-card-name">מאצ׳ה לאטה</h3>
+                        <p class="menu-card-desc">מאצ׳ה יפנית אותנטית עם חלב שיבולת שועל מוקצף.</p>
+                        <div class="menu-card-footer">
+                            <div class="menu-card-price">22<span> ש"ח</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="menu-item-line"></div>
-            </div>
-            <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80&auto=format" alt="Cold Brew">
-                <div class="menu-item-overlay"></div>
-                <div class="menu-item-content">
-                    <div class="menu-item-tag">חדש</div>
-                    <h3 class="menu-item-name">Cold Brew מיוחד</h3>
-                    <p class="menu-item-desc">חליטה קרה 24 שעות, וניל מדגסקר, קרח שחור</p>
-                    <div class="menu-item-price">26 <span>ש"ח</span></div>
+                <div class="menu-card">
+                    <div class="menu-card-img">
+                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&h=400&fit=crop&q=80" alt="Cold Brew">
+                    </div>
+                    <div class="menu-card-body">
+                        <h3 class="menu-card-name">קפה קר מיוחד</h3>
+                        <p class="menu-card-desc">Cold brew 24 שעות עם וניל מדגסקר ומעט קרמל.</p>
+                        <div class="menu-card-footer">
+                            <div class="menu-card-price">26<span> ש"ח</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="menu-item-line"></div>
-            </div>
-            <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&q=80&auto=format" alt="Cappuccino">
-                <div class="menu-item-overlay"></div>
-                <div class="menu-item-content">
-                    <h3 class="menu-item-name">קפוצ׳ינו איטלקי</h3>
-                    <p class="menu-item-desc">שליש אספרסו, שליש חלב, שליש קצף משי</p>
-                    <div class="menu-item-price">16 <span>ש"ח</span></div>
+                <div class="menu-card">
+                    <div class="menu-card-img">
+                        <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500&h=400&fit=crop&q=80" alt="Lavender Latte">
+                    </div>
+                    <div class="menu-card-body">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+                            <h3 class="menu-card-name">לוונדר לאטה</h3>
+                            <span class="menu-card-badge">חדש</span>
+                        </div>
+                        <p class="menu-card-desc">תמצית לוונדר צרפתית עם חלב מוקצף ומגע דבש.</p>
+                        <div class="menu-card-footer">
+                            <div class="menu-card-price">24<span> ש"ח</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="menu-item-line"></div>
-            </div>
-            <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?w=600&q=80&auto=format" alt="Lavender Latte">
-                <div class="menu-item-overlay"></div>
-                <div class="menu-item-content">
-                    <h3 class="menu-item-name">לוונדר לאטה</h3>
-                    <p class="menu-item-desc">תמצית לוונדר צרפתית עם דבש אורגני</p>
-                    <div class="menu-item-price">24 <span>ש"ח</span></div>
+                <div class="menu-card">
+                    <div class="menu-card-img">
+                        <img src="https://images.unsplash.com/photo-1534778101976-62847782c213?w=500&h=400&fit=crop&q=80" alt="Cappuccino">
+                    </div>
+                    <div class="menu-card-body">
+                        <h3 class="menu-card-name">קפוצ׳ינו אמיתי</h3>
+                        <p class="menu-card-desc">שליש אספרסו, שליש חלב, שליש קצף. מאוזן מושלם.</p>
+                        <div class="menu-card-footer">
+                            <div class="menu-card-price">16<span> ש"ח</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="menu-item-line"></div>
-            </div>
-            <div class="menu-item">
-                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80&auto=format" alt="V60">
-                <div class="menu-item-overlay"></div>
-                <div class="menu-item-content">
-                    <h3 class="menu-item-name">V60 פילטר</h3>
-                    <p class="menu-item-desc">חליטה ידנית, פולי אתיופיה Yirgacheffe</p>
-                    <div class="menu-item-price">18 <span>ש"ח</span></div>
+                <div class="menu-card">
+                    <div class="menu-card-img">
+                        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&h=400&fit=crop&q=80" alt="V60 Filter">
+                    </div>
+                    <div class="menu-card-body">
+                        <h3 class="menu-card-name">V60 פילטר</h3>
+                        <p class="menu-card-desc">חליטה ידנית של פולי אתיופיה בשיטת Pour Over.</p>
+                        <div class="menu-card-footer">
+                            <div class="menu-card-price">18<span> ש"ח</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="menu-item-line"></div>
             </div>
         </div>
     </section>
 
-    <!-- HORIZONTAL GALLERY -->
-    <div class="hgallery">
-        <div class="hgallery-track" id="galleryTrack">
-            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500&q=75&auto=format" alt=""></div>
-            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500&q=75&auto=format" alt=""></div>
-            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?w=500&q=75&auto=format" alt=""></div>
-            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefda?w=500&q=75&auto=format" alt=""></div>
-            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=500&q=75&auto=format" alt=""></div>
-            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=500&q=75&auto=format" alt=""></div>
-            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=500&q=75&auto=format" alt=""></div>
-            <div class="hgallery-item"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=500&q=75&auto=format" alt=""></div>
-        </div>
-    </div>
-
     <!-- EXPERIENCE -->
     <section class="experience" id="experience">
-        <div class="experience-inner">
-            <div class="section-label" style="justify-content: center;">
-                <span class="section-label-line"></span>
-                למה אנחנו
-            </div>
-            <h2 class="experience-heading">
-                חוויה שלא תמצאו<br><em>במקום אחר</em>
-            </h2>
-            <div class="experience-list">
-                <div class="experience-item">
-                    <h4>קלייה במקום</h4>
-                    <p>כל אצווה נקלית אצלנו, כל שבוע מחדש. הפולים לא נוסעים רחוק.</p>
+        <div class="experience-bg">
+            <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1600&h=900&fit=crop&q=80" alt="Coffee Shop Interior">
+        </div>
+        <div class="experience-overlay"></div>
+        <div class="experience-content">
+            <div class="section-tag" style="color: var(--gold-light);">למה אנחנו</div>
+            <h2 style="font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,52px);color:var(--cream);font-weight:400;">למה <em>Brew & Soul?</em></h2>
+            <div class="exp-grid">
+                <div class="exp-item">
+                    <div class="exp-number">01</div>
+                    <h3 class="exp-item-title">קלייה במקום</h3>
+                    <p class="exp-item-text">הפולים נקלים אצלנו כל שבוע. אצווה חדשה, טריות שאי אפשר לזייף.</p>
                 </div>
-                <div class="experience-item">
-                    <h4>סדנאות וטעימות</h4>
-                    <p>ערבי טעימות שבועיים, סדנאות חליטה, ומסע בעולם הקפה.</p>
+                <div class="exp-item">
+                    <div class="exp-number">02</div>
+                    <h3 class="exp-item-title">פתוח עד מאוחר</h3>
+                    <p class="exp-item-text">עד חצות בימי חול, עד 2:00 בלילה בסופ"ש. תמיד יש לכם לאן לבוא.</p>
                 </div>
-                <div class="experience-item">
-                    <h4>קהילה</h4>
-                    <p>בואו להיות חלק ממשפחה שחיה ונושמת קפה, כל יום.</p>
+                <div class="exp-item">
+                    <div class="exp-number">03</div>
+                    <h3 class="exp-item-title">קהילה חיה</h3>
+                    <p class="exp-item-text">סדנאות קפה, ערבי טעימות, ומפגשים שבועיים. בואו להיות חלק.</p>
                 </div>
             </div>
         </div>
@@ -1353,83 +1268,77 @@
 
     <!-- TESTIMONIALS -->
     <section class="testimonials" id="testimonials">
-        <h2 class="testimonials-heading">הקפה מדבר<br><em>בעד עצמו</em></h2>
-        <div class="testimonials-grid">
-            <div class="testi-card">
-                <div class="testi-stars">
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <div class="testimonial-large-quote">"</div>
+        <div class="testimonial-slides" id="testimonialSlides">
+            <div class="testimonial-slide active">
+                <p class="testimonial-quote-text">"הקפה הכי טוב בתל אביב, בלי שאלה. האספרסו שלהם שינה לי את הסטנדרט. אני מגיע כל בוקר כבר 3 שנים."</p>
+                <div class="testimonial-author-wrap">
+                    <img class="testimonial-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&q=80" alt="Daniel">
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">דניאל כהן</div>
+                        <div class="testimonial-role">מפתח תוכנה</div>
+                    </div>
                 </div>
-                <p class="testi-quote">הקפה הכי טוב בתל אביב, בלי שאלה. האספרסו שלהם שינה לי את הסטנדרט. מגיע כל בוקר כבר 3 שנים.</p>
-                <div class="testi-line"></div>
-                <div class="testi-name">דניאל כהן</div>
-                <div class="testi-role">מפתח תוכנה</div>
             </div>
-            <div class="testi-card">
-                <div class="testi-stars">
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <div class="testimonial-slide">
+                <p class="testimonial-quote-text">"המקום המושלם לעבודה מרחוק. WiFi מעולה, שקעים בכל שולחן, והצוות תמיד מחייך. כאילו הסלון השני שלי."</p>
+                <div class="testimonial-author-wrap">
+                    <img class="testimonial-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&q=80" alt="Michal">
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">מיכל לוי</div>
+                        <div class="testimonial-role">מעצבת גרפית</div>
+                    </div>
                 </div>
-                <p class="testi-quote">המקום המושלם לעבודה מרחוק. WiFi מעולה, שקעים בכל שולחן, והצוות תמיד מחייך. הסלון השני שלי.</p>
-                <div class="testi-line"></div>
-                <div class="testi-name">מיכל לוי</div>
-                <div class="testi-role">מעצבת גרפית</div>
             </div>
-            <div class="testi-card">
-                <div class="testi-stars">
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    <svg class="testi-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <div class="testimonial-slide">
+                <p class="testimonial-quote-text">"סדנת הקפה שלהם פתחה לי עולם חדש. עכשיו אני מבינה את ההבדל בין פולים ושיטות חליטה. ממליצה בחום!"</p>
+                <div class="testimonial-author-wrap">
+                    <img class="testimonial-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&q=80" alt="Shira">
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">שירה אברהם</div>
+                        <div class="testimonial-role">עורכת דין</div>
+                    </div>
                 </div>
-                <p class="testi-quote">סדנת הקפה שלהם פתחה לי עולם חדש. עכשיו אני מבינה את ההבדל בין פולים ושיטות חליטה. ממליצה בחום!</p>
-                <div class="testi-line"></div>
-                <div class="testi-name">שירה אברהם</div>
-                <div class="testi-role">עורכת דין</div>
             </div>
+        </div>
+        <div class="testimonial-dots">
+            <div class="testimonial-dot active" onclick="goToSlide(0)"></div>
+            <div class="testimonial-dot" onclick="goToSlide(1)"></div>
+            <div class="testimonial-dot" onclick="goToSlide(2)"></div>
         </div>
     </section>
 
     <!-- CTA -->
-    <section class="cta" id="reserve">
-        <div class="cta-bg">
-            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1600&q=80&auto=format" alt="">
-        </div>
+    <section class="cta" id="cta">
+        <div class="cta-bg-text">COFFEE</div>
         <div class="cta-content">
-            <h2 class="cta-heading">מוכנים<br>ל<em>חוויה?</em></h2>
-            <p class="cta-text">השאירו טלפון ונשמור לכם מקום.<br>אפשר גם פשוט להגיע, אבל אנחנו אוהבים שיש שולחן מחכה.</p>
+            <div class="section-tag" style="justify-content:center;color:var(--gold-light);">הזמנה</div>
+            <h2 class="cta-title">מוכנים לחוויה<br>שלא תשכחו?</h2>
+            <p class="cta-text">השאירו מספר טלפון ונשמור לכם מקום. אפשר גם פשוט להגיע, אבל אנחנו אוהבים שיש לכם שולחן מחכה.</p>
             <form class="cta-form" onsubmit="event.preventDefault()">
-                <input type="tel" class="cta-input" placeholder="050-000-0000" dir="ltr">
-                <button type="submit" class="cta-btn">שמרו לי</button>
+                <input type="tel" class="cta-input" placeholder="050-0000000" dir="ltr">
+                <button type="submit" class="cta-submit">שמרו לי מקום</button>
             </form>
         </div>
     </section>
 
     <!-- FOOTER -->
     <footer class="footer">
-        <div class="footer-top">
+        <div class="footer-inner">
             <div>
-                <div class="footer-logo">Brew & Soul</div>
-                <p class="footer-tagline">קפה בוטיק בלב תל אביב. קלייה מקומית, אווירה ייחודית, וקפה שלא תמצאו במקום אחר.</p>
+                <div class="footer-brand">Brew & Soul</div>
+                <p class="footer-desc">קפה בוטיק בלב תל אביב. קלייה מקומית, אווירה ייחודית, וקפה שלא תמצאו במקום אחר.</p>
             </div>
             <div>
-                <div class="footer-col-title">ניווט</div>
+                <div class="footer-heading">ניווט</div>
                 <ul class="footer-links">
                     <li><a href="#about">הסיפור שלנו</a></li>
-                    <li><a href="#menu-section">תפריט</a></li>
+                    <li><a href="#menu">תפריט</a></li>
                     <li><a href="#experience">חוויה</a></li>
-                    <li><a href="#testimonials">לקוחות</a></li>
                 </ul>
             </div>
             <div>
-                <div class="footer-col-title">שעות פתיחה</div>
+                <div class="footer-heading">שעות פתיחה</div>
                 <ul class="footer-links">
                     <li><a href="#">א׳ עד ה׳: 07:00 עד 00:00</a></li>
                     <li><a href="#">ו׳: 07:00 עד 15:00</a></li>
@@ -1437,7 +1346,7 @@
                 </ul>
             </div>
             <div>
-                <div class="footer-col-title">בואו אלינו</div>
+                <div class="footer-heading">יצירת קשר</div>
                 <ul class="footer-links">
                     <li><a href="#">דיזנגוף 99, תל אביב</a></li>
                     <li><a href="tel:031234567" dir="ltr">03 123 4567</a></li>
@@ -1446,17 +1355,17 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <span class="footer-copy">2026 BREW & SOUL</span>
+            <span class="footer-copy">&copy; 2026 Brew & Soul. כל הזכויות שמורות.</span>
             <div class="footer-socials">
-                <a href="#" aria-label="Instagram">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                </a>
-                <a href="#" aria-label="Facebook">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                </a>
-                <a href="#" aria-label="TikTok">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
-                </a>
+                <div class="footer-social">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8A97E" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </div>
+                <div class="footer-social">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8A97E" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </div>
+                <div class="footer-social">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8A97E" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                </div>
             </div>
         </div>
     </footer>
@@ -1465,205 +1374,345 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
     <script>
-    gsap.registerPlugin(ScrollTrigger);
+        gsap.registerPlugin(ScrollTrigger);
 
-    // ===== CUSTOM CURSOR =====
-    const cursor = document.getElementById('cursor');
-    if (window.innerWidth > 768) {
-        let cx = 0, cy = 0, tx = 0, ty = 0;
-        document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
-        function updateCursor() {
-            cx += (tx - cx) * 0.12;
-            cy += (ty - cy) * 0.12;
-            cursor.style.left = cx + 'px';
-            cursor.style.top = cy + 'px';
-            requestAnimationFrame(updateCursor);
-        }
-        updateCursor();
-        document.querySelectorAll('a, button, .menu-item').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-        });
-    }
+        // === CUSTOM CURSOR ===
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursorDot');
+        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
 
-    // ===== MOBILE MENU =====
-    const burger = document.getElementById('burger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    let menuOpen = false;
-    burger.addEventListener('click', () => {
-        menuOpen = !menuOpen;
-        mobileMenu.classList.toggle('open', menuOpen);
-    });
-    function closeMobile() {
-        menuOpen = false;
-        mobileMenu.classList.remove('open');
-    }
-
-    // ===== PRELOADER =====
-    const preloaderTl = gsap.timeline();
-    preloaderTl
-        .to('.preloader-text', { opacity: 1, duration: 0.8, ease: 'power2.out' })
-        .to('.preloader-line', { width: 120, duration: 1, ease: 'power2.inOut' }, '-=0.3')
-        .to('.preloader', {
-            yPercent: -100,
-            duration: 0.9,
-            ease: 'power3.inOut',
-            delay: 0.3,
-            onComplete: () => document.getElementById('preloader').style.display = 'none'
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            gsap.to(cursorDot, { x: mouseX - 3, y: mouseY - 3, duration: 0.1 });
         });
 
-    // ===== REDUCED MOTION AWARE =====
-    const mm = gsap.matchMedia();
-
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
-
-        // HERO TEXT REVEAL
-        gsap.to('.hero-heading .line-inner', {
-            y: 0,
-            duration: 1.2,
-            stagger: 0.12,
-            ease: 'power4.out',
-            delay: 1.8
+        gsap.ticker.add(() => {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
         });
 
-        gsap.to('.hero-label', { opacity: 1, duration: 0.8, delay: 2.6, ease: 'power2.out' });
-        gsap.from('.hero-label-line', { width: 0, duration: 0.6, delay: 2.8, ease: 'power2.inOut' });
-        gsap.to('.hero-desc', { opacity: 1, y: 0, duration: 0.8, delay: 3, ease: 'power2.out' });
-        gsap.set('.hero-desc', { y: 20 });
-        gsap.to('.hero-cta', { opacity: 1, y: 0, duration: 0.7, delay: 3.2, ease: 'power2.out' });
-        gsap.set('.hero-cta', { y: 20 });
-
-        // HERO PARALLAX
-        gsap.to('.hero-bg img', {
-            y: 120,
-            scale: 1.1,
-            ease: 'none',
-            scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+        document.querySelectorAll('a, button, .menu-card, .footer-social, .testimonial-dot').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
 
-        gsap.to('.hero-content', {
-            opacity: 0, y: -60, ease: 'none',
-            scrollTrigger: { trigger: '.hero', start: '50% top', end: 'bottom top', scrub: true }
-        });
-
-        // SCROLL DOT
-        gsap.to('.hero-scroll-dot', {
-            y: 50, duration: 1.5, repeat: -1, yoyo: true, ease: 'power1.inOut'
-        });
-
-        // NAV SCROLL
-        ScrollTrigger.create({
-            start: 'top -80',
-            onUpdate: self => document.getElementById('nav').classList.toggle('scrolled', self.progress > 0)
-        });
-
-        // ABOUT IMAGE PARALLAX
-        gsap.to('.about-image img', {
-            y: -60, ease: 'none',
-            scrollTrigger: { trigger: '.about', start: 'top bottom', end: 'bottom top', scrub: true }
-        });
-
-        // ABOUT CONTENT REVEAL
-        const aboutTl = gsap.timeline({
-            scrollTrigger: { trigger: '.about-content', start: 'top 75%', toggleActions: 'play none none none' }
-        });
-        aboutTl
-            .from('.section-label', { x: 30, opacity: 0, duration: 0.5 })
-            .from('.about-heading', { y: 50, opacity: 0, duration: 0.8 }, '-=0.2')
-            .from('.about-text', { y: 30, opacity: 0, duration: 0.6 }, '-=0.3')
-            .from('.about-detail', { y: 40, opacity: 0, stagger: 0.1, duration: 0.5 }, '-=0.2');
-
-        // COUNTER ANIMATION
-        document.querySelectorAll('.counter').forEach(counter => {
-            const target = parseInt(counter.dataset.target);
-            gsap.to(counter, {
-                textContent: target,
-                duration: 2.5,
-                ease: 'power1.out',
-                snap: { textContent: 1 },
-                scrollTrigger: { trigger: counter, start: 'top 85%', toggleActions: 'play none none none' },
-                onUpdate() {
-                    const val = Math.round(parseFloat(counter.textContent));
-                    counter.textContent = val >= 1000 ? val.toLocaleString() : val;
-                }
-            });
-        });
-
-        // MENU HEADER
-        gsap.from('.menu-heading', {
-            y: 60, opacity: 0, duration: 0.9,
-            scrollTrigger: { trigger: '.menu-header', start: 'top 80%', toggleActions: 'play none none none' }
-        });
-
-        // MENU CARDS STAGGER
-        ScrollTrigger.batch('.menu-item', {
-            onEnter: batch => gsap.from(batch, {
-                y: 100, opacity: 0, duration: 1, stagger: 0.08, ease: 'power3.out', overwrite: true
-            }),
-            start: 'top 90%'
-        });
-
-        // HORIZONTAL GALLERY SCROLL
-        const track = document.getElementById('galleryTrack');
-        gsap.to(track, {
-            x: () => -(track.scrollWidth - window.innerWidth + 100),
-            ease: 'none',
-            scrollTrigger: {
-                trigger: '.hgallery',
-                start: 'top 80%',
-                end: 'bottom 20%',
-                scrub: 1
+        // === LOADER ===
+        const loaderTl = gsap.timeline({
+            onComplete: () => {
+                gsap.to('#loader', { autoAlpha: 0, duration: 0.5, onComplete: () => {
+                    document.getElementById('loader').style.display = 'none';
+                    startPageAnimations();
+                }});
             }
         });
 
-        // EXPERIENCE ITEMS
-        gsap.from('.experience-heading', {
-            y: 50, opacity: 0, duration: 0.8,
-            scrollTrigger: { trigger: '.experience', start: 'top 70%', toggleActions: 'play none none none' }
-        });
+        loaderTl
+            .from('.loader-text span', {
+                y: 80,
+                autoAlpha: 0,
+                duration: 0.6,
+                stagger: 0.04,
+                ease: 'back.out(1.7)'
+            })
+            .to('#loaderLine', { width: '200px', duration: 0.8, ease: 'power2.inOut' }, '-=0.3')
+            .to('.loader-text span', {
+                y: -80,
+                autoAlpha: 0,
+                duration: 0.4,
+                stagger: 0.02,
+                ease: 'power2.in'
+            }, '+=0.3')
+            .to('#loaderLine', { width: 0, duration: 0.3 }, '-=0.2');
 
-        gsap.from('.experience-item', {
-            y: 60, opacity: 0, stagger: 0.15, duration: 0.7,
-            scrollTrigger: { trigger: '.experience-list', start: 'top 80%', toggleActions: 'play none none none' }
-        });
+        // === PAGE ANIMATIONS ===
+        function startPageAnimations() {
+            const mm = gsap.matchMedia();
 
-        // TESTIMONIALS
-        gsap.from('.testimonials-heading', {
-            y: 60, opacity: 0, duration: 0.9,
-            scrollTrigger: { trigger: '.testimonials', start: 'top 70%', toggleActions: 'play none none none' }
-        });
+            mm.add("(prefers-reduced-motion: no-preference)", () => {
 
-        gsap.from('.testi-card', {
-            y: 80, opacity: 0, stagger: { amount: 0.4, from: 'center' }, duration: 0.8,
-            scrollTrigger: { trigger: '.testimonials-grid', start: 'top 80%', toggleActions: 'play none none none' }
-        });
+                // HERO
+                const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+                heroTl
+                    .from('.hero-tag', { x: -30, autoAlpha: 0, duration: 0.6 })
+                    .from('.hero-title .line-inner', {
+                        y: '110%',
+                        duration: 1,
+                        stagger: 0.12,
+                        ease: 'power4.out'
+                    }, '-=0.3')
+                    .from('.hero-desc', { y: 30, autoAlpha: 0, duration: 0.7 }, '-=0.4')
+                    .from('.hero-actions', { y: 20, autoAlpha: 0, duration: 0.6 }, '-=0.3')
+                    .from('.hero-img', { scale: 1.2, duration: 1.5, ease: 'power2.out' }, 0)
+                    .from('.hero-scroll-indicator', { autoAlpha: 0, duration: 0.5 }, '-=0.3');
 
-        // CTA PARALLAX
-        gsap.to('.cta-bg img', {
-            y: 80, ease: 'none',
-            scrollTrigger: { trigger: '.cta', start: 'top bottom', end: 'bottom top', scrub: true }
-        });
+                // Scroll bar animation
+                gsap.to('#scrollBarInner', {
+                    top: '100%',
+                    duration: 1.5,
+                    repeat: -1,
+                    ease: 'power1.inOut'
+                });
 
-        const ctaTl = gsap.timeline({
-            scrollTrigger: { trigger: '.cta', start: 'top 70%', toggleActions: 'play none none none' }
-        });
-        ctaTl
-            .from('.cta-heading', { y: 50, opacity: 0, duration: 0.9, ease: 'power3.out' })
-            .from('.cta-text', { y: 30, opacity: 0, duration: 0.6 }, '-=0.4')
-            .from('.cta-form', { y: 30, opacity: 0, duration: 0.6 }, '-=0.3');
+                // Hero parallax
+                gsap.to('.hero-img', {
+                    y: 100,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '.hero',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: true
+                    }
+                });
 
-        // FOOTER
-        gsap.from('.footer-top > div', {
-            y: 30, opacity: 0, stagger: 0.08, duration: 0.5,
-            scrollTrigger: { trigger: '.footer', start: 'top 90%', toggleActions: 'play none none none' }
-        });
-    });
+                gsap.to('.hero-left', {
+                    y: -50,
+                    autoAlpha: 0.3,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '.hero',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: true
+                    }
+                });
 
-    // REDUCED MOTION: show everything
-    mm.add('(prefers-reduced-motion: reduce)', () => {
-        gsap.set('.hero-heading .line-inner', { y: 0 });
-        gsap.set('.hero-label, .hero-desc, .hero-cta', { opacity: 1, y: 0 });
-    });
+                // NAV
+                ScrollTrigger.create({
+                    start: 'top -100',
+                    onUpdate: (self) => {
+                        document.getElementById('nav').classList.toggle('solid', self.progress > 0);
+                    }
+                });
+
+                // ABOUT - Image reveals
+                gsap.to('.about-img-main', {
+                    clipPath: 'inset(0 0 0% 0)',
+                    duration: 1.2,
+                    ease: 'power3.inOut',
+                    scrollTrigger: {
+                        trigger: '.about',
+                        start: 'top 70%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+
+                gsap.to('.about-img-float', {
+                    clipPath: 'inset(0 0 0% 0)',
+                    duration: 1,
+                    ease: 'power3.inOut',
+                    delay: 0.3,
+                    scrollTrigger: {
+                        trigger: '.about',
+                        start: 'top 70%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+
+                gsap.from('.about-content > *', {
+                    y: 40,
+                    autoAlpha: 0,
+                    duration: 0.7,
+                    stagger: 0.12,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: '.about-content',
+                        start: 'top 75%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+
+                // About parallax on images
+                gsap.to('.about-img-main', {
+                    y: -30,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '.about',
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: true
+                    }
+                });
+
+                // Counter animation
+                document.querySelectorAll('.counter').forEach(counter => {
+                    const target = parseInt(counter.dataset.target);
+                    gsap.to(counter, {
+                        textContent: target,
+                        duration: 2.5,
+                        ease: 'power1.out',
+                        snap: { textContent: 1 },
+                        scrollTrigger: {
+                            trigger: '.about-stats',
+                            start: 'top 85%',
+                            toggleActions: 'play none none none'
+                        },
+                        onUpdate: function() {
+                            const val = Math.round(parseFloat(counter.textContent));
+                            counter.textContent = val >= 1000 ? val.toLocaleString() : val;
+                        }
+                    });
+                });
+
+                // MENU - Horizontal drag scroll
+                const menuTrack = document.getElementById('menuTrack');
+                let isDragging = false, startX, scrollLeft;
+
+                menuTrack.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startX = e.pageX - menuTrack.parentElement.offsetLeft;
+                    scrollLeft = menuTrack.parentElement.scrollLeft;
+                    menuTrack.style.cursor = 'grabbing';
+                });
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    menuTrack.style.cursor = 'grab';
+                });
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    const x = e.pageX - menuTrack.parentElement.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    menuTrack.parentElement.scrollLeft = scrollLeft - walk;
+                });
+
+                menuTrack.style.cursor = 'grab';
+                menuTrack.parentElement.style.overflow = 'auto';
+                menuTrack.parentElement.style.scrollbarWidth = 'none';
+
+                // Menu cards reveal
+                gsap.from('.menu-header > *', {
+                    y: 30,
+                    autoAlpha: 0,
+                    duration: 0.6,
+                    stagger: 0.1,
+                    scrollTrigger: {
+                        trigger: '.menu-section',
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+
+                gsap.from('.menu-card', {
+                    x: 100,
+                    autoAlpha: 0,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: '.menu-track',
+                        start: 'top 85%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+
+                // EXPERIENCE
+                gsap.from('.exp-item', {
+                    y: 60,
+                    autoAlpha: 0,
+                    duration: 0.8,
+                    stagger: 0.15,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: '.exp-grid',
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+
+                // Experience background parallax
+                gsap.to('.experience-bg img', {
+                    y: 80,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '.experience',
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: true
+                    }
+                });
+
+                // TESTIMONIALS
+                gsap.from('.testimonial-large-quote', {
+                    scale: 0.5,
+                    autoAlpha: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: '.testimonials',
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+
+                // CTA
+                gsap.from('.cta-content > *', {
+                    y: 40,
+                    autoAlpha: 0,
+                    duration: 0.7,
+                    stagger: 0.12,
+                    scrollTrigger: {
+                        trigger: '.cta',
+                        start: 'top 75%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+
+                gsap.to('.cta-bg-text', {
+                    x: -200,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '.cta',
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: true
+                    }
+                });
+
+                // FOOTER
+                gsap.from('.footer-inner > div', {
+                    y: 30,
+                    autoAlpha: 0,
+                    duration: 0.6,
+                    stagger: 0.1,
+                    scrollTrigger: {
+                        trigger: '.footer',
+                        start: 'top 90%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+            });
+
+            mm.add("(prefers-reduced-motion: reduce)", () => {
+                document.querySelectorAll('.img-reveal').forEach(el => {
+                    el.style.clipPath = 'inset(0)';
+                });
+            });
+        }
+
+        // === TESTIMONIAL SLIDER ===
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.testimonial-slide');
+        const dots = document.querySelectorAll('.testimonial-dot');
+
+        function goToSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+
+            gsap.fromTo(slides[index],
+                { autoAlpha: 0, y: 20 },
+                { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }
+            );
+
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        setInterval(() => {
+            goToSlide((currentSlide + 1) % slides.length);
+        }, 5000);
     </script>
 </body>
 </html>
